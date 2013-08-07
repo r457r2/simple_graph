@@ -17,7 +17,9 @@ SOURCES += main.cpp
 
 
 HEADERS  += \
-    vertix_desc.h \
-    simple_graph.h \
-    graph.h \
-    edge_desc.h
+    VertexDescriptor.h \
+    EdgeDescriptor.h \
+    Graph.h \
+    Representation.h \
+    ListRepresentation.h \
+    MatrixRepresentation.h
