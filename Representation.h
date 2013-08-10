@@ -16,8 +16,8 @@ public:
 	Representation (Representation &one){}
 	virtual ~Representation () {delete []vectorOfVertex;}
 
-	virtual int numberOfVertex () = 0;
-	virtual int numberOfEdge () = 0;
+	virtual int vertexCount () = 0;
+	virtual int edgeCount () = 0;
 	virtual bool isDirected () = 0;
 	virtual float getSaturationCoefficent () = 0;//коэффицент насыщенности
 	virtual bool insertVertex () = 0;

@@ -12,8 +12,8 @@ public:
 	MatrixRepresentation (MatrixRepresentation &one){}
 	~MatrixRepresentation (){}
 
-	int numberOfVertex (){}
-	int numberOfEdge (){}
+	int vertexCount (){}
+	int edgeCount (){}
 	bool isDirected (){}
 	float getSaturationCoefficent (){}//коэффицент насыщенности
 	bool insertVertex (){}

@@ -53,8 +53,8 @@ public:
 		delete graph;
 	}
 
-	int numberOfVertex (){return graph->numberOfVertex();}
-	int numberOfEdge (){return graph->numberOfEdge();}
+	int vertexCount (){return graph->vertexCount();}
+	int edgeCount (){return graph->edgeCount();}
 	bool isDirected (){return graph->isDirected();}
 	ReprType type(){return type;}
 
