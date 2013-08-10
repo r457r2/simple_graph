@@ -1,7 +1,7 @@
 #ifndef LIST_REPRESENTATION_H
 #define LIST_REPRESENTATION_H
 #include "Representation.h"
-//нет ни одной реализации.
+//РЅРµС‚ РЅРё РѕРґРЅРѕР№ СЂРµР°Р»РёР·Р°С†РёРё.
 template <typename V, typename E>//vertex,edge
 class ListRepresentation: public Representation
 {
@@ -15,7 +15,7 @@ class ListRepresentation: public Representation
 		int numberOfVertex (){}
 		int numberOfEdge (){}
 		bool isDirected (){}
-		float getSaturationCoefficent (){}//коэффицент насыщенности
+		float getSaturationCoefficent (){}//РєРѕСЌС„С„РёС†РµРЅС‚ РЅР°СЃС‹С‰РµРЅРЅРѕСЃС‚Рё
 		bool insertVertex (){}
 		bool deleteVertex (V _vertex1){}
 		bool insertEdge (V _vertex1, V _vertex2){}

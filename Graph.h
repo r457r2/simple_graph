@@ -3,7 +3,7 @@
 #include "Representation.h"
 #include "ListRepresentation.h"
 #include "MatrixRepresentation.h"
-//в этом классе реализованы все методы, кроме преобразований.
+//РІ СЌС‚РѕРј РєР»Р°СЃСЃРµ СЂРµР°Р»РёР·РѕРІР°РЅС‹ РІСЃРµ РјРµС‚РѕРґС‹, РєСЂРѕРјРµ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёР№.
 template <typename V, typename E>//vertex,edge
 class Graph
 {
@@ -34,9 +34,9 @@ class Graph
 		int numberOfEdge (){return graph->numberOfEdge();}
 		bool isDirected (){return graph->isDirected();}
 		bool isMForm (){return mGraph;}
-		float getSaturationCoefficent (){return graph->getSaturationCoefficent();}//коэффицент насыщенности
-		bool toListGraph (){}//запилить преобразование!!!
-		bool toMatrixGraph (){}//запилить преобразование!!!
+		float getSaturationCoefficent (){return graph->getSaturationCoefficent();}//РєРѕСЌС„С„РёС†РµРЅС‚ РЅР°СЃС‹С‰РµРЅРЅРѕСЃС‚Рё
+		bool toListGraph (){}//Р·Р°РїРёР»РёС‚СЊ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ!!!
+		bool toMatrixGraph (){}//Р·Р°РїРёР»РёС‚СЊ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ!!!
 		bool insertVertex (){return graph->insertVertex();}
 		bool deleteVertex (V _vertex1){return graph->deleteVertex(_vertex1);}
 		bool insertEdge (V _vertex1, V _vertex2){return graph->insertEdge(_vertex1, _vertex2);}

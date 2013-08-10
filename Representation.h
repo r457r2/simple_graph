@@ -1,6 +1,6 @@
 #ifndef REPRESENTATION_H
 #define REPRESENTATION_H
-//нет реализаций итераторов.
+//РЅРµС‚ СЂРµР°Р»РёР·Р°С†РёР№ РёС‚РµСЂР°С‚РѕСЂРѕРІ.
 template <typename V, typename E>//vertex,edge
 class Representation
 {
@@ -19,7 +19,7 @@ class Representation
 		virtual int numberOfVertex () = 0;
 		virtual int numberOfEdge () = 0;
 		virtual bool isDirected () = 0;
-		virtual float getSaturationCoefficent () = 0;//коэффицент насыщенности
+		virtual float getSaturationCoefficent () = 0;//РєРѕСЌС„С„РёС†РµРЅС‚ РЅР°СЃС‹С‰РµРЅРЅРѕСЃС‚Рё
 		virtual bool insertVertex () = 0;
 		virtual bool deleteVertex (V _vertex1) = 0;
 		virtual bool insertEdge (V _vertex1, V _vertex2) = 0;

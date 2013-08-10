@@ -1,6 +1,6 @@
 #ifndef EDGE_DESCRIPTOR_H
 #define EDGE_DESCRIPTOR_H
-//в этом классе реализованы все методы.
+//РІ СЌС‚РѕРј РєР»Р°СЃСЃРµ СЂРµР°Р»РёР·РѕРІР°РЅС‹ РІСЃРµ РјРµС‚РѕРґС‹.
 template <typename V, typename W, typename D>//vertex,weight,data
 class EdgeDescriptor
 {
