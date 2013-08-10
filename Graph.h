@@ -43,7 +43,6 @@ public:
 
 	Graph (Graph &one)
 	{
-		// what if graph is initialized already?
 		if (one.type == MATRIX_REPR) graph = new MatrixRepresentation<Vertex_t, Edge_t>(one);
 		else graph = new ListRepresentation<Vertex_t, Edge_t>(one);
 	}
