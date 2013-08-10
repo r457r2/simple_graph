@@ -4,30 +4,39 @@
 #include "ListRepresentation.h"
 #include "MatrixRepresentation.h"
 //в этом классе реализованы все методы, кроме преобразований.
+
 template <typename Vertex_t, typename Edge_t>
 class Graph
 {
 private:
-	bool mGraph;
+	ReprType type;
 	Representation<Vertex_t, Edge_t>* graph;
 
 public:
-	Graph () : mGraph(false){graph = new ListRepresentation<Vertex_t, Edge_t>();}//empty l-graph
-	Graph (int numberOfVertex, bool _oriented, bool _representation) : mGraph(_representation)//without edge
+
+	enum ReprType
 	{
-		if (_representation) graph = new MatrixRepresentation<Vertex_t, Edge_t>(numberOfVertex, _oriented);
+		LIST_REPR = 0,
+		MATRIX_REPR
+	};
+
+	Graph () : type(LIST_REPR){graph = new ListRepresentation<Vertex_t, Edge_t>();}//empty l-graph
+	Graph (int numberOfVertex, bool _oriented, ReprType t) : type(t)//without edge
+	{
+		if (type == MATRIX_REPR) graph = new MatrixRepresentation<Vertex_t, Edge_t>(numberOfVertex, _oriented);
 		else graph = new ListRepresentation<Vertex_t, Edge_t>(numberOfVertex, _oriented);
 	}
 
-	Graph (int numberOfVertex, int numberOfEdge, bool _oriented, bool _representation) : mGraph(_representation)//full
+	Graph (int numberOfVertex, int numberOfEdge, bool _oriented, ReprType t) : type(t)//full
 	{
-		if (_representation) graph = new MatrixRepresentation<Vertex_t, Edge_t>(numberOfVertex, numberOfEdge, _oriented);
+		if (type == MATRIX_REPR) graph = new MatrixRepresentation<Vertex_t, Edge_t>(numberOfVertex, numberOfEdge, _oriented);
 		else graph = new ListRepresentation<Vertex_t, Edge_t>(numberOfVertex, numberOfEdge, _oriented);
 	}
 
 	Graph (Graph &one)//copy
 	{
-		if (one.isMForm()) graph = new MatrixRepresentation<Vertex_t, Edge_t>(one);
+		// what if graph is initialized already?
+		if (one.type == MATRIX_REPR) graph = new MatrixRepresentation<Vertex_t, Edge_t>(one);
 		else graph = new ListRepresentation<Vertex_t, Edge_t>(one);
 	}
 	~Graph (){delete graph;}
@@ -35,7 +44,11 @@ public:
 	int numberOfVertex (){return graph->numberOfVertex();}
 	int numberOfEdge (){return graph->numberOfEdge();}
 	bool isDirected (){return graph->isDirected();}
-	bool isMForm (){return mGraph;}
+	ReprType type()
+	{
+		return type;
+	}
+
 	float getSaturationCoefficent (){return graph->getSaturationCoefficent();}//коэффицент насыщенности
 	bool toListGraph (){}//запилить преобразование!!!
 	bool toMatrixGraph (){}//запилить преобразование!!!
