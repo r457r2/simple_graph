@@ -20,34 +20,43 @@ public:
 		MATRIX_REPR
 	};
 
-	Graph () : type(LIST_REPR){graph = new ListRepresentation<Vertex_t, Edge_t>();}//empty l-graph
-	Graph (int numberOfVertex, bool _oriented, ReprType t) : type(t)//without edge
+	Graph () : type(LIST_REPR) // empty L-graph
 	{
-		if (type == MATRIX_REPR) graph = new MatrixRepresentation<Vertex_t, Edge_t>(numberOfVertex, _oriented);
-		else graph = new ListRepresentation<Vertex_t, Edge_t>(numberOfVertex, _oriented);
+		graph = new ListRepresentation<Vertex_t, Edge_t>();
+	}
+
+	Graph (int numberOfVertex, bool _oriented, ReprType t) : type(t) // without edge
+	{
+		if (type == MATRIX_REPR)
+			graph = new MatrixRepresentation<Vertex_t, Edge_t>(numberOfVertex, _oriented);
+		else
+			graph = new ListRepresentation<Vertex_t, Edge_t>(numberOfVertex, _oriented);
 	}
 
 	Graph (int numberOfVertex, int numberOfEdge, bool _oriented, ReprType t) : type(t)//full
 	{
-		if (type == MATRIX_REPR) graph = new MatrixRepresentation<Vertex_t, Edge_t>(numberOfVertex, numberOfEdge, _oriented);
-		else graph = new ListRepresentation<Vertex_t, Edge_t>(numberOfVertex, numberOfEdge, _oriented);
+		if (type == MATRIX_REPR)
+			graph = new MatrixRepresentation<Vertex_t, Edge_t>(numberOfVertex, numberOfEdge, _oriented);
+		else
+			graph = new ListRepresentation<Vertex_t, Edge_t>(numberOfVertex, numberOfEdge, _oriented);
 	}
 
-	Graph (Graph &one)//copy
+	Graph (Graph &one)
 	{
 		// what if graph is initialized already?
 		if (one.type == MATRIX_REPR) graph = new MatrixRepresentation<Vertex_t, Edge_t>(one);
 		else graph = new ListRepresentation<Vertex_t, Edge_t>(one);
 	}
-	~Graph (){delete graph;}
+
+	~Graph ()
+	{
+		delete graph;
+	}
 
 	int numberOfVertex (){return graph->numberOfVertex();}
 	int numberOfEdge (){return graph->numberOfEdge();}
 	bool isDirected (){return graph->isDirected();}
-	ReprType type()
-	{
-		return type;
-	}
+	ReprType type(){return type;}
 
 	float getSaturationCoefficent (){return graph->getSaturationCoefficent();}//коэффицент насыщенности
 	bool toListGraph (){}//запилить преобразование!!!
