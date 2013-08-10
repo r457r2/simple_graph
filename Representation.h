@@ -19,10 +19,11 @@ public:
 	virtual int vertexCount () = 0;
 	virtual int edgeCount () = 0;
 	virtual bool isDirected () = 0;
-	virtual float getSaturationCoefficent () = 0;//коэффицент насыщенности
-	virtual bool insertVertex () = 0;
+	virtual float getSaturationCoefficent () = 0;
+
+	virtual Vertex_t *insertVertex () = 0;
 	virtual bool deleteVertex (Vertex_t _vertex1) = 0;
-	virtual bool insertEdge (Vertex_t _vertex1, Vertex_t _vertex2) = 0;
+	virtual Edge_t *insertEdge (Vertex_t _vertex1, Vertex_t _vertex2) = 0;
 	virtual bool deleteEdge (Vertex_t _vertex1, Vertex_t _vertex2) = 0;
 
 	class GraphsVertexIterator

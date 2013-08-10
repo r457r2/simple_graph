@@ -15,10 +15,11 @@ public:
 	int vertexCount (){}
 	int edgeCount (){}
 	bool isDirected (){}
-	float getSaturationCoefficent (){}//коэффицент насыщенности
-	bool insertVertex (){}
+	float getSaturationCoefficent (){}
+
+	Vertex_t insertVertex (){}
 	bool deleteVertex (Vertex_t _vertex1){}
-	bool insertEdge (Vertex_t _vertex1, Vertex_t _vertex2){}
+	Edge_t insertEdge (Vertex_t _vertex1, Vertex_t _vertex2){}
 	bool deleteEdge (Vertex_t _vertex1, Vertex_t _vertex2){}
 };
 
