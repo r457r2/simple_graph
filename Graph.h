@@ -5,6 +5,12 @@
 #include "MatrixRepresentation.h"
 //в этом классе реализованы все методы, кроме преобразований.
 
+enum ReprType
+{
+	LIST_REPR = 0,
+	MATRIX_REPR
+};
+
 template <typename Vertex_t, typename Edge_t>
 class Graph
 {
@@ -13,12 +19,6 @@ private:
 	Representation<Vertex_t, Edge_t>* graph;
 
 public:
-
-	enum ReprType
-	{
-		LIST_REPR = 0,
-		MATRIX_REPR
-	};
 
 	Graph () : type(LIST_REPR) // empty L-graph
 	{
@@ -56,7 +56,7 @@ public:
 	int vertexCount (){return graph->vertexCount();}
 	int edgeCount (){return graph->edgeCount();}
 	bool isDirected (){return graph->isDirected();}
-	ReprType type(){return type;}
+	ReprType getType(){return type;}
 
 	float getSaturationCoefficent (){return graph->getSaturationCoefficent();}//коэффицент насыщенности
 	bool toListGraph (){}//запилить преобразование!!!
