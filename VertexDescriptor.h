@@ -10,7 +10,7 @@ private:
 	int index;
 
 public:
-	VertexDescriptor () : index(-1){}
+	VertexDescriptor () : index(-1){}	
 	VertexDescriptor (Name_t _name, Data_t _data, int _index) :
 		name(_name), data(_data), index(_index){}
 	~VertexDescriptor (){}

@@ -5,6 +5,9 @@
 template <typename Vertex_t, typename Edge_t>
 class MatrixRepresentation: public Representation<Vertex_t, Edge_t>
 {
+private:
+	QList<QList<Edge_t*> > repr;
+
 public:
 	MatrixRepresentation (){}
 	MatrixRepresentation (int numberOfVertex, bool _oriented){}
@@ -18,9 +21,9 @@ public:
 	float getSaturationCoefficent (){}
 
 	Vertex_t* insertVertex (){}
-	bool deleteVertex (Vertex_t _vertex1){}
-	Edge_t* insertEdge (Vertex_t _vertex1, Vertex_t _vertex2){}
-	bool deleteEdge (Vertex_t _vertex1, Vertex_t _vertex2){}
+	bool deleteVertex (Vertex_t* _vertex1){}
+	Edge_t* insertEdge (Vertex_t* _vertex1, Vertex_t* _vertex2){}
+	bool deleteEdge (Vertex_t* _vertex1, Vertex_t* _vertex2){}
 };
 
 #endif // MATRIX_REPRESENTATION_H

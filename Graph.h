@@ -60,9 +60,9 @@ public:
 	float getSaturationCoefficent (){return graph->getSaturationCoefficent();}//коэффицент насыщенности
 	bool toListGraph (){}//запилить преобразование!!!
 	bool toMatrixGraph (){}//запилить преобразование!!!
-	Vertex_t insertVertex (){return graph->insertVertex();}
+	Vertex_t* insertVertex (){return graph->insertVertex();}
 	bool deleteVertex (Vertex_t _vertex1){return graph->deleteVertex(_vertex1);}
-	Edge_t insertEdge (Vertex_t _vertex1, Vertex_t _vertex2){return graph->insertEdge(_vertex1, _vertex2);}
+	Edge_t* insertEdge (Vertex_t _vertex1, Vertex_t _vertex2){return graph->insertEdge(_vertex1, _vertex2);}
 	bool deleteEdge (Vertex_t _vertex1, Vertex_t _vertex2){return graph->deleteEdge(_vertex1, _vertex2);}
 };
 

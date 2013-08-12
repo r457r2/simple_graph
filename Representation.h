@@ -1,12 +1,12 @@
 #ifndef REPRESENTATION_H
 #define REPRESENTATION_H
+#include "QList"
 //нет реализаций итераторов.
 template <typename Vertex_t, typename Edge_t>
 class Representation
 {
 protected:
-	Vertex_t** vectorOfVertex;
-	int lenthOfVector;
+	QList<Vertex_t*> vectorOfVertex;
 	bool oriented;
 
 public:
@@ -14,17 +14,17 @@ public:
 	Representation (int numberOfVertex, bool _oriented){}
 	Representation (int numberOfVertex, int numberOfEge, bool _oriented){}
 	Representation (Representation &one){}
-	virtual ~Representation () {delete []vectorOfVertex;}
+	virtual ~Representation () {}
 
 	virtual int vertexCount () = 0;
 	virtual int edgeCount () = 0;
 	virtual bool isDirected () = 0;
 	virtual float getSaturationCoefficent () = 0;
 
-	virtual Vertex_t *insertVertex () = 0;
-	virtual bool deleteVertex (Vertex_t _vertex1) = 0;
-	virtual Edge_t *insertEdge (Vertex_t _vertex1, Vertex_t _vertex2) = 0;
-	virtual bool deleteEdge (Vertex_t _vertex1, Vertex_t _vertex2) = 0;
+	virtual Vertex_t* insertVertex () = 0;
+	virtual bool deleteVertex (Vertex_t* _vertex1) = 0;
+	virtual Edge_t* insertEdge (Vertex_t* _vertex1, Vertex_t* _vertex2) = 0;
+	virtual bool deleteEdge (Vertex_t* _vertex1, Vertex_t* _vertex2) = 0;
 
 	class GraphsVertexIterator
 	{
