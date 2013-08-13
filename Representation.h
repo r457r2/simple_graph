@@ -6,8 +6,8 @@ template <typename Vertex_t, typename Edge_t>
 class Representation
 {
 protected:
-	QList<Vertex_t*> vectorOfVertex;
-	bool oriented;
+	QList<Vertex_t*> vertexes;
+	bool directed;
 
 public:
 	Representation (){}
@@ -16,10 +16,20 @@ public:
 	Representation (Representation &one){}
 	virtual ~Representation () {}
 
-	virtual int vertexCount () = 0;
+	int vertexCount ()
+	{
+		return this->vertexes.size();
+	}
+
 	virtual int edgeCount () = 0;
 	virtual bool isDirected () = 0;
-	virtual float getSaturationCoefficent () = 0;
+
+	float getSaturationCoefficent ()
+	{
+		float edgeCou = this->edgeCount();
+		float vertexCou = this->vertexCount();
+		return (edgeCou / (vertexCou * vertexCou));
+	}
 
 	virtual Vertex_t* insertVertex () = 0;
 	virtual bool deleteVertex (Vertex_t* _vertex1) = 0;
