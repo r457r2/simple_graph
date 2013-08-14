@@ -187,7 +187,7 @@ public:
 				return true;
 			}
 		}
-		return NULL;
+		return false;
 	}
 };
 
