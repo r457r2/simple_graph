@@ -30,9 +30,21 @@ public:
 
 	float getSaturationCoefficent ()
 	{
-		float edgeCou = this->edgeCount();
-		float vertexCou = this->vertexCount();
-		return (edgeCou / (vertexCou * vertexCou));
+		int edgeCou = this->edgeCount();
+		int maxEdgeCou = 0;
+		if (directed = true)
+		{
+			float vertexCou = this->vertexCount();
+			maxEdgeCou = vertexCou * vertexCou;
+		}
+		else
+		{
+			for (int i = 1; i <= this->vertexCount(); i++)
+			{
+				maxEdgeCou += i;
+			}
+		}
+		return (((float)edgeCou) / maxEdgeCou);
 	}
 
 	virtual Vertex_t* insertVertex () = 0;

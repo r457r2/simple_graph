@@ -9,14 +9,14 @@ private:
 	QList<QList<Edge_t*> > repr;
 
 public:
-	ListRepresentation (bool _oriented = false)
+	ListRepresentation (bool _directed = false)
 	{
-		this->directed = _oriented;
+		this->directed = _directed;
 	}
 
-	ListRepresentation (int numberOfVertex, bool _oriented  = false)
+	ListRepresentation (int numberOfVertex, bool _directed  = false)
 	{
-		this->directed = _oriented;
+		this->directed = _directed;
 
 		for (int i = 0; i < numberOfVertex; i++)
 		{
@@ -26,9 +26,20 @@ public:
 		}
 	}
 
-	ListRepresentation (int numberOfVertex, int numberOfEdge, bool _oriented  = false)
+	ListRepresentation (int numberOfVertex, int numberOfEdge, bool _directed = false)
 	{
-		this->directed = _oriented;
+		this->directed = _directed;
+
+		if ((_directed == true) && (numberOfEdge > (numberOfVertex * numberOfVertex)))
+				numberOfEdge = numberOfVertex * numberOfVertex;
+
+		int maxEdgeCounter = 0;
+		for (int i = 1; i <= this->vertexes.size(); i++)
+		{
+			maxEdgeCounter += i;
+		}
+		if (numberOfEdge > maxEdgeCounter)
+			numberOfEdge = maxEdgeCounter;
 
 		for (int i = 0; i < numberOfVertex; i++)
 		{
@@ -37,7 +48,7 @@ public:
 			repr.append(QList<Edge_t*>());
 		}
 
-		qsrand(time_t(NULL));//init
+		qsrand(time_t(NULL));
 		for (int i = 0; i < numberOfEdge;)
 		{
 			int posBegin = qrand()%numberOfVertex;
@@ -52,7 +63,27 @@ public:
 
 	}
 
-	ListRepresentation (ListRepresentation &one){}//need iterators realization
+	ListRepresentation (ListRepresentation &one)
+	{
+		this->directed = one.directed;
+
+		for (int i = 0; i < one.vertexCount(); i++)
+		{
+			this->vertexes.append(new Vertex_t(*(one.vertexes[i])));
+		}
+
+		for (int i = 0; i < one.vertexCount(); i++)
+		{
+			for (int j = 0; j < one.repr[i].size(); j++)
+			{
+				this->repr[i].append(new Edge_t(
+										this->vertexes[one.repr[i][j]->From()->getIndex()],
+										this->vertexes[one.repr[i][j]->To()->getIndex()],
+										one.repr[i][j]->getWeight(),
+										one.repr[i][j]->getData()));
+			}
+		}
+	}
 
 	~ListRepresentation ()
 	{
