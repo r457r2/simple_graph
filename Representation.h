@@ -9,6 +9,15 @@ protected:
 	QList<Vertex_t*> vertexes;
 	bool directed;
 
+	//Checks if vertex belongs to graph
+	bool belongs(Vertex_t *v)
+	{
+		int idx = v->getIndex();
+		if(idx <= vertexes.count() && vertexes[idx] == v)
+			return true;
+		return false;
+	}
+
 public:
 	Representation (){}
 	Representation (int numberOfVertex, bool _oriented){}
@@ -30,9 +39,9 @@ public:
 
 	float getSaturationCoefficent ()
 	{
-		float edgeCou = this->edgeCount();
-		float vertexCou = this->vertexCount();
-		return (edgeCou / (vertexCou * vertexCou));
+		float edgeCnt = this->edgeCount();
+		float vertexCnt = this->vertexCount();
+		return (edgeCnt / (vertexCnt * vertexCnt));
 	}
 
 	virtual Vertex_t* insertVertex () = 0;
