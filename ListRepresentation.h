@@ -173,7 +173,7 @@ public:
 
 	Edge_t* insertEdge (Vertex_t* _pvertex1, Vertex_t* _pvertex2)
 	{
-		if (((this->vertexes.contains(_pvertex1)) && (this->vertexes.contains(_pvertex2))) == false)
+		if (((this->belongs(_pvertex1)) && (this->belongs(_pvertex2))) == false)
 			return NULL;
 
 		int pos1 = _pvertex1->getIndex();
@@ -191,7 +191,7 @@ public:
 
 	bool deleteEdge (Vertex_t* _vertex1, Vertex_t* _vertex2)
 	{
-		if (this->vertexes.contains(_vertex1) == false)
+		if (this->belongs(_vertex1) == false)
 			return false;
 
 		int pos1 = _vertex1->getIndex();

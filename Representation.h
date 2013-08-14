@@ -9,6 +9,15 @@ protected:
 	QList<Vertex_t*> vertexes;
 	bool directed;
 
+	//Checks if vertex belongs to graph
+	bool belongs(Vertex_t *pvertex)
+	{
+		int index = pvertex->getIndex();
+		if(index <= vertexes.count() && vertexes[index] == pvertex)
+			return true;
+		return false;
+	}
+
 public:
 	Representation (){}
 	Representation (int numberOfVertex, bool _oriented){}
