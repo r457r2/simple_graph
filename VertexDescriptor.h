@@ -13,6 +13,13 @@ public:
 	VertexDescriptor () : index(-1){}	
 	VertexDescriptor (Name_t _name, Data_t _data, int _index) :
 		name(_name), data(_data), index(_index){}
+	VertexDescriptor (VertexDescriptor& one)
+	{
+		name = one.getName();
+		data = one.getData();
+		index = one.getIndex();
+	}
+
 	~VertexDescriptor (){}
 
 	Name_t getName (){return name;}
@@ -23,13 +30,6 @@ public:
 
 	int getIndex (){return index;}
 	void setIndex (int _index){index = _index;}
-
-	VertexDescriptor<Name_t, Data_t>& operator= (VertexDescriptor <Name_t, Data_t>& val)
-	{
-		name = val.getName();
-		data = val.getData();
-		index = val.getIndex();
-	}
 };
 
 #endif // VERTEX_DESCRIPTOR_H

@@ -52,9 +52,23 @@ public:
 
 	}
 
-	ListRepresentation (ListRepresentation &one){}//need realization
+	ListRepresentation (ListRepresentation &one){}//need iterators realization
 
-	~ListRepresentation (){}//need realization
+	~ListRepresentation ()
+	{
+		for (int i = 0; i < this->vertexes.size(); i++)
+		{
+			delete this->vertexes[i];
+		}
+
+		for (int i = 0; i < this->vertexes.size(); i++)
+		{
+			for (int j = 0; j < repr[i].size(); j++)
+			{
+				delete repr[i][j];
+			}
+		}
+	}\
 
 	int edgeCount ()
 	{
@@ -86,11 +100,6 @@ public:
 		return ((edgeCount / 2) + loopEdgeCount);
 	}
 
-	bool isDirected ()
-	{
-		return this->directed;
-	}
-
 	Vertex_t* insertVertex ()
 	{
 		this->vertexes.append(new Vertex_t());
@@ -99,9 +108,9 @@ public:
 		return this->vertexes.last();
 	}
 
-	bool deleteVertex (Vertex_t* _vertex1)
+	bool deleteVertex (Vertex_t* _pvertex1)
 	{
-		int pos = this->vertexes.indexOf(_vertex1);
+		int pos = this->vertexes.indexOf(_pvertex1);
 
 		if (pos == -1)
 			return false;
@@ -110,15 +119,17 @@ public:
 		{
 			for (int j = 0; j < repr[i].size(); j++)
 			{
-				if (repr[i][j]->isComingTo(_vertex1) == true)
+				if (repr[i][j]->isComingTo(_pvertex1) == true)
 				{
+					delete repr[i][j];
 					repr[i].removeAt(j);
 					break;
 				}
 			}
 		}
 
-		this->vertexes.removeOne(_vertex1);
+		delete this->vertexes[pos];
+		this->vertexes.removeOne(_pvertex1);
 		repr.removeAt(pos);
 
 		for (; pos < this->vertexes.size(); pos++)
@@ -129,40 +140,46 @@ public:
 		return true;
 	}
 
-	Edge_t* insertEdge (Vertex_t* _vertex1, Vertex_t* _vertex2)
+	Edge_t* insertEdge (Vertex_t* _pvertex1, Vertex_t* _pvertex2)
 	{
-		if (((this->vertexes.contains(_vertex1)) && (this->vertexes.contains(_vertex2))) == false)
+		if (((this->vertexes.contains(_pvertex1)) && (this->vertexes.contains(_pvertex2))) == false)
 			return NULL;
 
-		for (int i = 0; i < repr[_vertex1->getIndex()].size(); i++)
+		int pos1 = _pvertex1->getIndex();
+		for (int i = 0; i < repr[pos1].size(); i++)
 		{
-			if (repr[_vertex1->getIndex()][i]->isComingTo(_vertex2) == true)
+			if (repr[pos1][i]->isComingTo(_pvertex2) == true)
 				return NULL;
 		}
 
-		repr[_vertex1->getIndex()].append(new Edge_t(_vertex1, _vertex2));
+		repr[pos1].append(new Edge_t(_pvertex1, _pvertex2));
 		if (this->directed == false)
-			repr[_vertex2->getIndex()].append(new Edge_t(_vertex2, _vertex1));
-		return repr[_vertex1->getIndex()].last();
+			repr[_pvertex2->getIndex()].append(new Edge_t(_pvertex2, _pvertex1));
+		return repr[pos1].last();
 	}
 
 	bool deleteEdge (Vertex_t* _vertex1, Vertex_t* _vertex2)
 	{
 		if (this->vertexes.contains(_vertex1) == false)
 			return false;
-		for (int i = 0; i < repr[_vertex1->getIndex()].size(); i++)
+
+		int pos1 = _vertex1->getIndex();
+		for (int i = 0; i < repr[pos1].size(); i++)
 		{
-			if (repr[_vertex1->getIndex()][i]->isComingTo(_vertex2) == true)
+			if (repr[pos1][i]->isComingTo(_vertex2) == true)
 			{
-				repr[_vertex1->getIndex()].removeAt(i);
+				delete repr[pos1][i];
+				repr[pos1].removeAt(i);
 
 				if (this->directed == false)
 				{
-					for (int j = 0; j < repr[_vertex2->getIndex()].size(); j++)
+					int pos2 = _vertex2->getIndex();
+					for (int j = 0; j < repr[pos2].size(); j++)
 					{
-						if (repr[_vertex2->getIndex()][j]->isComingTo(_vertex1) == true)
+						if (repr[pos2][j]->isComingTo(_vertex1) == true)
 						{
-							repr[_vertex2->getIndex()].removeAt(j);
+							delete repr[pos2][j];
+							repr[pos2].removeAt(j);
 							break;
 						}
 					}

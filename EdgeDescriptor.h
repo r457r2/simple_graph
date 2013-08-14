@@ -19,10 +19,10 @@ public:
 	~EdgeDescriptor (){}
 
 	Vertex_t* getBegin (){return from;}
-	void setBegin (Vertex_t* _vertex){from = _vertex;}
+	void setBegin (Vertex_t* _pvertex){from = _pvertex;}
 
 	Vertex_t* getEnd (){return to;}
-	void setEnd (Vertex_t* _vertex){to = _vertex;}
+	void setEnd (Vertex_t* _pvertex){to = _pvertex;}
 
 	Weight_t getWeight (){return weight;}
 	void setWeight (Weight_t _weight){weight = _weight;}
@@ -30,8 +30,8 @@ public:
 	Data_t getData (){return data;}
 	void setData (Data_t _data){data = _data;}
 
-	bool isComingTo (Vertex_t* _vertex){return ((to == _vertex)? true : false);}
-	bool isComingFrom (Vertex_t* _vertex){return ((from == _vertex)? true : false);}
+	bool isComingTo (Vertex_t* _pvertex){return ((to == _pvertex)? true : false);}
+	bool isComingFrom (Vertex_t* _pvertex){return ((from == _pvertex)? true : false);}
 };
 
 #endif // EDGE_DESCRIPTOR_H

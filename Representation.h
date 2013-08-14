@@ -22,7 +22,11 @@ public:
 	}
 
 	virtual int edgeCount () = 0;
-	virtual bool isDirected () = 0;
+
+	bool isDirected ()
+	{
+		return this->directed;
+	}
 
 	float getSaturationCoefficent ()
 	{
@@ -32,22 +36,27 @@ public:
 	}
 
 	virtual Vertex_t* insertVertex () = 0;
-	virtual bool deleteVertex (Vertex_t* _vertex1) = 0;
-	virtual Edge_t* insertEdge (Vertex_t* _vertex1, Vertex_t* _vertex2) = 0;
-	virtual bool deleteEdge (Vertex_t* _vertex1, Vertex_t* _vertex2) = 0;
+	virtual bool deleteVertex (Vertex_t* _pvertex1) = 0;
+	virtual Edge_t* insertEdge (Vertex_t* _pvertex1, Vertex_t* _pvertex2) = 0;
+	virtual bool deleteEdge (Vertex_t* _pvertex1, Vertex_t* _pvertex2) = 0;
 
 	class GraphsVertexIterator
 	{
 	private:
 		bool isSet;
-		Vertex_t* master;
+		Representation& masterClass;
+		Vertex_t* pmasterVertex;
 
 	public:
-		GraphsVertexIterator (){}
+		GraphsVertexIterator (Representation& _masterClass)
+			: isSet(false), masterClass(_masterClass), pmasterVertex(NULL){}
 
 		GraphsVertexIterator* begin (){}
+
 		GraphsVertexIterator* end (){}
+
 		bool operator++ (){}
+
 		Vertex_t* operator* (){}
 	};
 
