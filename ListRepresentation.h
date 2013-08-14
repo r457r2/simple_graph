@@ -10,7 +10,9 @@ private:
 
 public:
 	ListRepresentation (bool _oriented = false)
-	{this->directed = _oriented;}
+	{
+		this->directed = _oriented;
+	}
 
 	ListRepresentation (int numberOfVertex, bool _oriented  = false)
 	{
@@ -20,7 +22,7 @@ public:
 		{
 			this->vertexes.append(new Vertex_t());
 			this->vertexes.last()->setIndex(i);
-			repr.append(*(new QList<Edge_t*>()));
+			repr.append(QList<Edge_t*>());
 		}
 	}
 
@@ -32,7 +34,7 @@ public:
 		{
 			this->vertexes.append(new Vertex_t());
 			this->vertexes.last()->setIndex(i);
-			repr.append(*(new QList<Edge_t*>()));
+			repr.append(QList<Edge_t*>());
 		}
 
 		qsrand(time_t(NULL));//init
@@ -53,9 +55,6 @@ public:
 	ListRepresentation (ListRepresentation &one){}//need realization
 
 	~ListRepresentation (){}//need realization
-
-	int vertexCount ()
-	{return this->vertexes.size();}
 
 	int edgeCount ()
 	{
@@ -88,13 +87,15 @@ public:
 	}
 
 	bool isDirected ()
-	{return this->directed;}
+	{
+		return this->directed;
+	}
 
 	Vertex_t* insertVertex ()
 	{
 		this->vertexes.append(new Vertex_t());
 		this->vertexes.last()->setIndex(this->vertexes.size() - 1);
-		repr.append(*(new QList<Edge_t*>()));
+		repr.append(QList<Edge_t*>());
 		return this->vertexes.last();
 	}
 
