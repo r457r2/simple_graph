@@ -58,8 +58,8 @@ public:
 	ReprType getType(){return type;}
 
 	float getSaturationCoefficent (){return graph->getSaturationCoefficent();}//коэффицент насыщенности
-	bool toListGraph (){}//запилить преобразование!!!
-	bool toMatrixGraph (){}//запилить преобразование!!!
+	bool toListGraph (){return false;}//запилить преобразование!!!
+	bool toMatrixGraph (){return false;}//запилить преобразование!!!
 	Vertex_t* insertVertex (){return graph->insertVertex();}
 	bool deleteVertex (Vertex_t _vertex1){return graph->deleteVertex(_vertex1);}
 	Edge_t* insertEdge (Vertex_t _vertex1, Vertex_t _vertex2){return graph->insertEdge(_vertex1, _vertex2);}
