@@ -10,26 +10,25 @@ private:
 	QList<QList<Edge_t*> > matrix;
 
 public:
-	MatrixRepresentation (bool isdirected = false)
-	{
-		this->directed = isdirected;
-	}
+	MatrixRepresentation (bool isdirected = false) : directed(isdirected) {}
 
-	MatrixRepresentation (int numberOfVertex, bool isdirected)
+	MatrixRepresentation (int numberOfVertex, bool isdirected) : directed(isdirected)
 	{
-		this->directed = isdirected;
 		for(int i = 0; i < numberOfVertex; i++)
 			insertVertex();
 	}
 
-//TODO: handle invalid numberOfEdge (more than it could be)
 	MatrixRepresentation (int numberOfVertex, int numberOfEdge, bool isdirected)
+		: directed(isdirected)
 	{
 		// Create graph with given number of vertexes and given number of random
 		// edges
-		this->directed = isdirected;
 		for(int i = 0; i < numberOfVertex; i++)
 			insertVertex();
+
+		int maxEdgesCount = this->maxEdgesCount();
+		if(numberOfEdge > maxEdgesCount)
+			numberOfEdge = maxEdgesCount;
 
 		QTime t = QTime::currentTime();
 		qsrand((uint) t.msec());

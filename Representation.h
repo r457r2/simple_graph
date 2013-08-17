@@ -18,6 +18,19 @@ protected:
 		return false;
 	}
 
+	int maxEdgesCount()
+	{
+		if(directed)
+			return vertexes.size() * vertexes.size();
+		else
+		{
+			int retval = 0;
+			for(int i = 0; i < vertexes.size(); i++)
+				retval += i;
+			return retval;
+		}
+	}
+
 public:
 	Representation (){}
 	Representation (int numberOfVertex, bool _oriented){}
@@ -149,21 +162,7 @@ public:
 
 	float getSaturationCoefficent ()
 	{
-		int edgeCnt = this->edgeCount();
-		int maxEdgeCnt = 0;
-		if (directed == true)
-		{
-			float vertexCnt = this->vertexCount();
-			maxEdgeCnt = vertexCnt * vertexCnt;
-		}
-		else
-		{
-			for (int i = 1; i <= this->vertexCount(); i++)
-			{
-				maxEdgeCnt += i;
-			}
-		}
-		return (((float)edgeCnt) / maxEdgeCnt);
+		return (float) edgeCount() / maxEdgesCount();
 	}
 
 	virtual Vertex_t* insertVertex () = 0;
