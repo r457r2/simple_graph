@@ -25,7 +25,7 @@ protected:
 		else
 		{
 			int retval = 0;
-			for(int i = 0; i < vertexes.size(); i++)
+			for(int i = 0; i <= vertexes.size(); i++)
 				retval += i;
 			return retval;
 		}

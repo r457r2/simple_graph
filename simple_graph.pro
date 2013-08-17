@@ -13,7 +13,8 @@ TARGET = simple_graph
 TEMPLATE = app
 
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    graphtest.cpp
 
 
 HEADERS  += \
@@ -22,4 +23,5 @@ HEADERS  += \
     Graph.h \
     Representation.h \
     ListRepresentation.h \
-    MatrixRepresentation.h
+    MatrixRepresentation.h \
+    graphtest.h
