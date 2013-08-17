@@ -43,7 +43,7 @@ public:
 		}
 
 		qsrand(time_t(NULL));
-		for (int edgesInserted = 0; i < numberOfEdge;)
+		for (int edgesInserted = 0; edgesInserted < numberOfEdge;)
 		{
 			int posBegin = qrand() % numberOfVertex;
 			int posEnd = qrand() % numberOfVertex;
