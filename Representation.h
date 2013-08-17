@@ -149,21 +149,21 @@ public:
 
 	float getSaturationCoefficent ()
 	{
-		int edgeCou = this->edgeCount();
-		int maxEdgeCou = 0;
-		if (directed = true)
+		int edgeCnt = this->edgeCount();
+		int maxEdgeCnt = 0;
+		if (directed == true)
 		{
-			float vertexCou = this->vertexCount();
-			maxEdgeCou = vertexCou * vertexCou;
+			float vertexCnt = this->vertexCount();
+			maxEdgeCnt = vertexCnt * vertexCnt;
 		}
 		else
 		{
 			for (int i = 1; i <= this->vertexCount(); i++)
 			{
-				maxEdgeCou += i;
+				maxEdgeCnt += i;
 			}
 		}
-		return (((float)edgeCou) / maxEdgeCou);
+		return (((float)edgeCnt) / maxEdgeCnt);
 	}
 
 	virtual Vertex_t* insertVertex () = 0;
