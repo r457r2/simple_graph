@@ -9,15 +9,10 @@ private:
 	QList<QList<Edge_t*> > repr;
 
 public:
-	ListRepresentation (bool _directed = false)
-	{
-		this->directed = _directed;
-	}
+	ListRepresentation (bool _directed = false) : directed(_directed) {}
 
-	ListRepresentation (int numberOfVertex, bool _directed  = false)
+	ListRepresentation (int numberOfVertex, bool _directed  = false) : directed(_directed)
 	{
-		this->directed = _directed;
-
 		for (int i = 0; i < numberOfVertex; i++)
 		{
 			this->vertexes.append(new Vertex_t());
@@ -27,19 +22,18 @@ public:
 	}
 
 	ListRepresentation (int numberOfVertex, int numberOfEdge, bool _directed = false)
+		: directed(_directed)
 	{
-		this->directed = _directed;
-
 		if ((_directed == true) && (numberOfEdge > (numberOfVertex * numberOfVertex)))
 				numberOfEdge = numberOfVertex * numberOfVertex;
 
-		int maxEdgeCounter = 0;
+		int maxEdgeCount = 0;
 		for (int i = 1; i <= this->vertexes.size(); i++)
 		{
-			maxEdgeCounter += i;
+			maxEdgeCount += i;
 		}
-		if (numberOfEdge > maxEdgeCounter)
-			numberOfEdge = maxEdgeCounter;
+		if (!_directed && numberOfEdge > maxEdgeCount)
+			numberOfEdge = maxEdgeCount;
 
 		for (int i = 0; i < numberOfVertex; i++)
 		{
@@ -49,18 +43,17 @@ public:
 		}
 
 		qsrand(time_t(NULL));
-		for (int i = 0; i < numberOfEdge;)
+		for (int edgesInserted = 0; i < numberOfEdge;)
 		{
-			int posBegin = qrand()%numberOfVertex;
-			int posEnd = qrand()%numberOfVertex;
+			int posBegin = qrand() % numberOfVertex;
+			int posEnd = qrand() % numberOfVertex;
 			if (insertEdge(this->vertexes[posBegin], this->vertexes[posEnd]) != NULL)
 			{
 				if (this->directed == false)
 					insertEdge(this->vertexes[posEnd], this->vertexes[posBegin]);
-				i++;
+				edgesInserted++;
 			}
 		}
-
 	}
 
 	ListRepresentation (ListRepresentation &one)
@@ -103,7 +96,6 @@ public:
 
 	int edgeCount ()
 	{
-
 		int edgeCount = 0;
 		if (this->directed == true)
 		{
@@ -141,10 +133,10 @@ public:
 
 	bool deleteVertex (Vertex_t* _pvertex1)
 	{
-		int pos = this->vertexes.indexOf(_pvertex1);
-
-		if (pos == -1)
+		if(!this->belongs(_pvertex1))
 			return false;
+
+		int pos = _pvertex1->getIndex();
 
 		for (int i = 0; i < this->vertexes.size(); i++)
 		{
@@ -173,7 +165,7 @@ public:
 
 	Edge_t* insertEdge (Vertex_t* _pvertex1, Vertex_t* _pvertex2)
 	{
-		if (((this->belongs(_pvertex1)) && (this->belongs(_pvertex2))) == false)
+		if (!this->belongs(_pvertex1) || !this->belongs(_pvertex2))
 			return NULL;
 
 		int pos1 = _pvertex1->getIndex();
@@ -191,7 +183,7 @@ public:
 
 	bool deleteEdge (Vertex_t* _vertex1, Vertex_t* _vertex2)
 	{
-		if (this->belongs(_vertex1) == false)
+		if (!this->belongs(_vertex1) || !this->belongs(_vertex2))
 			return false;
 
 		int pos1 = _vertex1->getIndex();
