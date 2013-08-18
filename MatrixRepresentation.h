@@ -13,16 +13,16 @@ private:
 	QList<QList<Edge_t*> > matrix;
 
 public:
-	MatrixRepresentation (bool isdirected = false) : directed(isdirected) {}
+	MatrixRepresentation (bool isdirected = false) : Representation<Vertex_t, Edge_t>::directed(isdirected) {}
 
-	MatrixRepresentation (int numberOfVertex, bool isdirected) : directed(isdirected)
+	MatrixRepresentation (int numberOfVertex, bool isdirected) : Representation<Vertex_t, Edge_t>::directed(isdirected)
 	{
 		for(int i = 0; i < numberOfVertex; i++)
 			insertVertex();
 	}
 
 	MatrixRepresentation (int numberOfVertex, int numberOfEdge, bool isdirected)
-		: directed(isdirected)
+		: Representation<Vertex_t, Edge_t>::directed(isdirected)
 	{
 		// Create graph with given number of vertexes and given number of random
 		// edges
