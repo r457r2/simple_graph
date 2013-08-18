@@ -1,11 +1,15 @@
 #ifndef REPRESENTATION_H
 #define REPRESENTATION_H
 #include "QList"
-//нет реализаций итераторов.
+
+template <typename Vertex_t, typename Edge_t>
+class Graph;
+
 template <typename Vertex_t, typename Edge_t>
 class Representation
 {
 protected:
+	friend class Graph<Vertex_t, Edge_t>;
 	QList<Vertex_t*> vertexes;
 	bool directed;
 
@@ -37,116 +41,6 @@ public:
 	Representation (int numberOfVertex, int numberOfEge, bool _oriented){}
 	Representation (Representation &one){}
 	virtual ~Representation () {}
-
-	class GraphsVertexIterator
-	{
-	private:
-		bool isSet;
-		Representation& masterClass;
-		typename QList<Vertex_t>::Iterator iter;
-
-	public:
-		GraphsVertexIterator()
-			: isSet(false), masterClass(NULL), iter(){}
-
-		GraphsVertexIterator (Representation& _masterClass)
-			: isSet(false), masterClass(_masterClass), iter(){}
-
-		bool setToBegin()
-		{
-			if (masterClass == NULL)
-				return false;
-
-			if (masterClass.vertexes.isEmpty() == true)
-			{
-				isSet = false;
-				return false;
-			}
-
-			iter = masterClass.vertexes.begin();
-			return true;
-		}
-
-		bool setToEnd()
-		{
-			if (masterClass == NULL)
-				return false;
-
-			isSet = false;
-
-			if (masterClass.vertexes.isEmpty() == true)
-				return false;
-
-			iter = masterClass.vertexes.end();
-			return true;
-		}
-
-		bool operator++ ()
-		{
-			if (masterClass == NULL)
-				return false;
-
-			if (isSet == false)
-				return false;
-
-			iter++;
-			if (iter == masterClass.vertexes.end())
-				isSet = false;
-			return true;
-		}
-
-		bool operator== (GraphsVertexIterator& other)
-		{
-			if ((this->masterClass == other.masterClass) && (this->iter == other.iter))
-				return true;
-
-			return false;
-		}
-
-		void operator= (GraphsVertexIterator& other)
-		{
-			this->isSet = other.isSet;
-			this->masterClass = other.masterClass;
-			this->iter = other.iter;
-		}
-
-		bool operator!= (GraphsVertexIterator& other)
-		{
-			if (masterClass == NULL)
-				return false;
-
-			if ((this->isSet == other.isSet) &&
-					(this->masterClass == other.masterClass) &&
-					(this->iter == other.iter))
-				return false;
-			return true;
-		}
-
-		Vertex_t* operator* ()
-		{
-			if (masterClass == NULL)
-				return NULL;
-
-			if (isSet == false)
-				return NULL;
-			return *iter;
-		}
-	};
-
-
-	GraphsVertexIterator* beginForVertexesIterator ()
-	{
-		GraphsVertexIterator* i = new GraphsVertexIterator(*this);
-		i->setToBegin();
-		return i;
-	}
-
-	GraphsVertexIterator* endForVertexesIterator ()
-	{
-		GraphsVertexIterator* i = new GraphsVertexIterator(*this);
-		i->setToEnd();
-		return i;
-	}
 
 	int vertexCount ()
 	{

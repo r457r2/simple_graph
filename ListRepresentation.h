@@ -3,10 +3,14 @@
 #include "Representation.h"
 
 template <typename Vertex_t, typename Edge_t>
+class Graph;
+
+template <typename Vertex_t, typename Edge_t>
 class ListRepresentation: public Representation<Vertex_t, Edge_t>
 {
 private:
-	QList<QList<Edge_t*> > repr;
+	friend class Graph<Vertex_t, Edge_t>;
+	QList<QList<Edge_t*> > list;
 
 public:
 	ListRepresentation (bool _directed = false) : directed(_directed) {}
@@ -17,7 +21,7 @@ public:
 		{
 			this->vertexes.append(new Vertex_t());
 			this->vertexes.last()->setIndex(i);
-			repr.append(QList<Edge_t*>());
+			list.append(QList<Edge_t*>());
 		}
 	}
 
@@ -39,7 +43,7 @@ public:
 		{
 			this->vertexes.append(new Vertex_t());
 			this->vertexes.last()->setIndex(i);
-			repr.append(QList<Edge_t*>());
+			list.append(QList<Edge_t*>());
 		}
 
 		qsrand(time_t(NULL));
@@ -67,13 +71,13 @@ public:
 
 		for (int i = 0; i < one.vertexCount(); i++)
 		{
-			for (int j = 0; j < one.repr[i].size(); j++)
+			for (int j = 0; j < one.list[i].size(); j++)
 			{
-				this->repr[i].append(new Edge_t(
-										this->vertexes[one.repr[i][j]->From()->getIndex()],
-										this->vertexes[one.repr[i][j]->To()->getIndex()],
-										one.repr[i][j]->getWeight(),
-										one.repr[i][j]->getData()));
+				this->list[i].append(new Edge_t(
+										this->vertexes[one.list[i][j]->From()->getIndex()],
+										this->vertexes[one.list[i][j]->To()->getIndex()],
+										one.list[i][j]->getWeight(),
+										one.list[i][j]->getData()));
 			}
 		}
 	}
@@ -87,9 +91,9 @@ public:
 
 		for (int i = 0; i < this->vertexes.size(); i++)
 		{
-			for (int j = 0; j < repr[i].size(); j++)
+			for (int j = 0; j < list[i].size(); j++)
 			{
-				delete repr[i][j];
+				delete list[i][j];
 			}
 		}
 	}\
@@ -101,7 +105,7 @@ public:
 		{
 			for (int i = 0; i < this->vertexes.size(); i++)
 			{
-				edgeCount += repr[i].size();
+				edgeCount += list[i].size();
 			}
 			return edgeCount;
 		}
@@ -109,10 +113,10 @@ public:
 		int loopEdgeCount = 0;
 		for (int i = 0; i < this->vertexes.size(); i++)
 		{
-			edgeCount += repr[i].size();
-			for (int j = 0; j < repr[i].size(); j++)
+			edgeCount += list[i].size();
+			for (int j = 0; j < list[i].size(); j++)
 			{
-				if (repr[i][j]->getBegin() == repr[i][j]->getEnd())
+				if (list[i][j]->getBegin() == list[i][j]->getEnd())
 				{
 					edgeCount--;
 					loopEdgeCount++;
@@ -127,7 +131,7 @@ public:
 	{
 		this->vertexes.append(new Vertex_t());
 		this->vertexes.last()->setIndex(this->vertexes.size() - 1);
-		repr.append(QList<Edge_t*>());
+		list.append(QList<Edge_t*>());
 		return this->vertexes.last();
 	}
 
@@ -140,12 +144,12 @@ public:
 
 		for (int i = 0; i < this->vertexes.size(); i++)
 		{
-			for (int j = 0; j < repr[i].size(); j++)
+			for (int j = 0; j < list[i].size(); j++)
 			{
-				if (repr[i][j]->isComingTo(_pvertex1) == true)
+				if (list[i][j]->isComingTo(_pvertex1) == true)
 				{
-					delete repr[i][j];
-					repr[i].removeAt(j);
+					delete list[i][j];
+					list[i].removeAt(j);
 					break;
 				}
 			}
@@ -153,7 +157,7 @@ public:
 
 		delete this->vertexes[pos];
 		this->vertexes.removeOne(_pvertex1);
-		repr.removeAt(pos);
+		list.removeAt(pos);
 
 		for (; pos < this->vertexes.size(); pos++)
 		{
@@ -169,16 +173,16 @@ public:
 			return NULL;
 
 		int pos1 = _pvertex1->getIndex();
-		for (int i = 0; i < repr[pos1].size(); i++)
+		for (int i = 0; i < list[pos1].size(); i++)
 		{
-			if (repr[pos1][i]->isComingTo(_pvertex2) == true)
+			if (list[pos1][i]->isComingTo(_pvertex2) == true)
 				return NULL;
 		}
 
-		repr[pos1].append(new Edge_t(_pvertex1, _pvertex2));
+		list[pos1].append(new Edge_t(_pvertex1, _pvertex2));
 		if (this->directed == false)
-			repr[_pvertex2->getIndex()].append(new Edge_t(_pvertex2, _pvertex1));
-		return repr[pos1].last();
+			list[_pvertex2->getIndex()].append(new Edge_t(_pvertex2, _pvertex1));
+		return list[pos1].last();
 	}
 
 	bool deleteEdge (Vertex_t* _vertex1, Vertex_t* _vertex2)
@@ -187,22 +191,22 @@ public:
 			return false;
 
 		int pos1 = _vertex1->getIndex();
-		for (int i = 0; i < repr[pos1].size(); i++)
+		for (int i = 0; i < list[pos1].size(); i++)
 		{
-			if (repr[pos1][i]->isComingTo(_vertex2) == true)
+			if (list[pos1][i]->isComingTo(_vertex2) == true)
 			{
-				delete repr[pos1][i];
-				repr[pos1].removeAt(i);
+				delete list[pos1][i];
+				list[pos1].removeAt(i);
 
 				if (this->directed == false)
 				{
 					int pos2 = _vertex2->getIndex();
-					for (int j = 0; j < repr[pos2].size(); j++)
+					for (int j = 0; j < list[pos2].size(); j++)
 					{
-						if (repr[pos2][j]->isComingTo(_vertex1) == true)
+						if (list[pos2][j]->isComingTo(_vertex1) == true)
 						{
-							delete repr[pos2][j];
-							repr[pos2].removeAt(j);
+							delete list[pos2][j];
+							list[pos2].removeAt(j);
 							break;
 						}
 					}

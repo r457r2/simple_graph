@@ -1,12 +1,15 @@
 #ifndef MATRIX_REPRESENTATION_H
 #define MATRIX_REPRESENTATION_H
 #include "Representation.h"
-#include <QTime>
+
+template <typename Vertex_t, typename Edge_t>
+class Graph;
 
 template <typename Vertex_t, typename Edge_t>
 class MatrixRepresentation: public Representation<Vertex_t, Edge_t>
 {
 private:
+	friend class Graph<Vertex_t, Edge_t>;
 	QList<QList<Edge_t*> > matrix;
 
 public:
