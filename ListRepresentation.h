@@ -13,9 +13,9 @@ private:
 	QList<QList<Edge_t*> > list;
 
 public:
-	ListRepresentation (bool _directed = false) : Representation<Vertex_t, Edge_t>::directed(_directed) {}
+	ListRepresentation (bool _directed = false) : Representation<Vertex_t, Edge_t>(_directed) {}
 
-	ListRepresentation (int numberOfVertex, bool _directed  = false) : Representation<Vertex_t, Edge_t>::directed(_directed)
+	ListRepresentation (int numberOfVertex, bool _directed  = false) : Representation<Vertex_t, Edge_t>(_directed)
 	{
 		for (int i = 0; i < numberOfVertex; i++)
 		{
@@ -26,7 +26,7 @@ public:
 	}
 
 	ListRepresentation (int numberOfVertex, int numberOfEdge, bool _directed = false)
-		: Representation<Vertex_t, Edge_t>::directed(_directed)
+		: Representation<Vertex_t, Edge_t>(_directed)
 	{
 		if ((_directed == true) && (numberOfEdge > (numberOfVertex * numberOfVertex)))
 				numberOfEdge = numberOfVertex * numberOfVertex;

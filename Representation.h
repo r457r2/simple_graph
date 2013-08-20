@@ -36,10 +36,7 @@ protected:
 	}
 
 public:
-	Representation (){}
-	Representation (int numberOfVertex, bool _oriented){}
-	Representation (int numberOfVertex, int numberOfEge, bool _oriented){}
-	Representation (Representation &one){}
+	Representation (bool _directed) : directed(_directed) {}
 	virtual ~Representation () {}
 
 	int vertexCount ()
