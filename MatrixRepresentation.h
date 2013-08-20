@@ -1,6 +1,7 @@
 #ifndef MATRIX_REPRESENTATION_H
 #define MATRIX_REPRESENTATION_H
 #include "Representation.h"
+#include <QTime>
 
 template <typename Vertex_t, typename Edge_t>
 class Graph;
