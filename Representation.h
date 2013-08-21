@@ -60,53 +60,6 @@ public:
 	virtual bool deleteVertex (Vertex_t* _pvertex1) = 0;
 	virtual Edge_t* insertEdge (Vertex_t* _pvertex1, Vertex_t* _pvertex2) = 0;
 	virtual bool deleteEdge (Vertex_t* _pvertex1, Vertex_t* _pvertex2) = 0;
-
-//	class GraphsEdgeIterator
-//	{
-//		private:
-//			bool isSet;
-//			Edge_t* master;
-
-//		public:
-//			GraphsEdgeIterator (){}
-
-//			GraphsEdgeIterator* begin (){}
-//			GraphsEdgeIterator* end (){}
-//			bool operator++ (){}
-//			Edge_t* operator* (){}
-//	};
-
-//	class VertexsComingEdgeIterator
-//	{
-//		private:
-//			bool isSet;
-//			Vertex_t* masterVertex;
-//			Edge_t* master;
-
-//		public:
-//			VertexsComingEdgeIterator (Vertex_t* _masterVertex){}
-
-//			VertexsComingEdgeIterator* begin (){}
-//			VertexsComingEdgeIterator* end (){}
-//			bool operator++ (){}
-//			Edge_t* operator* (){}
-//	};
-
-//	class VertexsIncomingEdgeIterator
-//	{
-//		private:
-//			bool isSet;
-//			Vertex_t* masterVertex;
-//			Edge_t* master;
-
-//		public:
-//			VertexsIncomingEdgeIterator (Vertex_t* _masterVertex){}
-
-//			VertexsIncomingEdgeIterator* begin (){}
-//			VertexsIncomingEdgeIterator* end (){}
-//			bool operator++ (){}
-//			Edge_t* operator* (){}
-//	};
 };
 
 #endif // REPRESENTATION_H

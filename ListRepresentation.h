@@ -28,16 +28,8 @@ public:
 	ListRepresentation (int numberOfVertex, int numberOfEdge, bool _directed = false)
 		: Representation<Vertex_t, Edge_t>(_directed)
 	{
-		if ((_directed == true) && (numberOfEdge > (numberOfVertex * numberOfVertex)))
-				numberOfEdge = numberOfVertex * numberOfVertex;
-
-		int maxEdgeCount = 0;
-		for (int i = 1; i <= this->vertexes.size(); i++)
-		{
-			maxEdgeCount += i;
-		}
-		if (!_directed && numberOfEdge > maxEdgeCount)
-			numberOfEdge = maxEdgeCount;
+		if (numberOfEdge > this->maxEdgesCount())
+			numberOfEdge = this->maxEdgesCount();
 
 		for (int i = 0; i < numberOfVertex; i++)
 		{

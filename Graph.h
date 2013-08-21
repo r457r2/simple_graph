@@ -193,7 +193,7 @@ public:
 			return (this->edge != other.edge);
 		}
 
-		Vertex_t* operator* ()
+		Edge_t* operator* ()
 		{
 			return *edge;
 		}
