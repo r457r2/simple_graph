@@ -462,20 +462,20 @@ public:
 
 		Representation<Vertex_t,Edge_t>* newGraph = new ListRepresentation<Vertex_t,Edge_t>(graph->isDirected());
 
-		for (int i = 0; i < graph->edgeCount(); i++)
+		for (int i = 0; i < graph->vertexCount(); i++)
 		{
 			Vertex_t* newVertex = newGraph->insertVertex();
 			*newVertex = *(graph->vertexes[i]);
 		}
-		for (int i = 0; i < graph->edgeCount(); i++)
+		for (int i = 0; i < graph->vertexCount(); i++)
 		{
-			for (int j = 0; j < ((ListRepresentation<Vertex_t,Edge_t>*)graph)->list[i].size(); j++)
+			for (int j = 0; j < graph->vertexCount(); j++)
 			{
-				if (graph->list[i][j] != NULL)
+				if ((static_cast<MatrixRepresentation<Vertex_t,Edge_t>*>(graph))->matrix[i][j] != NULL)
 				{
 					Edge_t* newEdge = newGraph->insertEdge(newGraph->vertexes[i], newGraph->vertexes[j]);
-					newEdge->setWeight() = ((ListRepresentation<Vertex_t,Edge_t>*)graph)->list[i][j]->getWeight();
-					newEdge->setData() = ((ListRepresentation<Vertex_t,Edge_t>*)graph)->list[i][j]->getData();
+					newEdge->setWeight() = (static_cast<MatrixRepresentation<Vertex_t,Edge_t>*>(graph))->matrix[i][j]->getWeight();
+					newEdge->setData() = (static_cast<MatrixRepresentation<Vertex_t,Edge_t>*>(graph))->matrix[i][j]->getData();
 				}
 			}
 		}
@@ -500,12 +500,12 @@ public:
 			*newVertex = *(graph->vertexes[i]);
 		}
 		for (int i = 0; i < graph->edgeCount(); i++)
-		{
-			for (int j = 0; j < ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[i].size(); j++)
+		{//(static_cast<ListRepresentation<Vertex_t,Edge_t>*>(graph))list
+			for (int j = 0; j < (static_cast<ListRepresentation<Vertex_t,Edge_t>*>(graph))->list[i].size(); j++)
 			{
 				Edge_t* newEdge = newGraph->insertEdge(newGraph->vertexes[i], newGraph->vertexes[j]);
-				newEdge->setWeight() = ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[i][j]->getWeight();
-				newEdge->setData() = ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[i][j]->getData();
+				newEdge->setWeight() = (static_cast<ListRepresentation<Vertex_t,Edge_t>*>(graph))->list[i][j]->getWeight();
+				newEdge->setData() = (static_cast<ListRepresentation<Vertex_t,Edge_t>*>(graph))->list[i][j]->getData();
 			}
 		}
 

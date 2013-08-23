@@ -18,11 +18,7 @@ public:
 	ListRepresentation (int numberOfVertex, bool _directed  = false) : Representation<Vertex_t, Edge_t>(_directed)
 	{
 		for (int i = 0; i < numberOfVertex; i++)
-		{
-			this->vertexes.append(new Vertex_t());
-			this->vertexes.last()->setIndex(i);
-			list.append(QList<Edge_t*>());
-		}
+			this->insertVertex();
 	}
 
 	ListRepresentation (int numberOfVertex, int numberOfEdge, bool _directed = false)
@@ -32,23 +28,16 @@ public:
 			numberOfEdge = this->maxEdgesCount();
 
 		for (int i = 0; i < numberOfVertex; i++)
-		{
-			this->vertexes.append(new Vertex_t());
-			this->vertexes.last()->setIndex(i);
-			list.append(QList<Edge_t*>());
-		}
+			this->insertVertex();
 
 		qsrand(time_t(NULL));
 		for (int edgesInserted = 0; edgesInserted < numberOfEdge;)
 		{
 			int posBegin = qrand() % numberOfVertex;
 			int posEnd = qrand() % numberOfVertex;
+
 			if (insertEdge(this->vertexes[posBegin], this->vertexes[posEnd]) != NULL)
-			{
-				if (this->directed == false)
-					insertEdge(this->vertexes[posEnd], this->vertexes[posBegin]);
 				edgesInserted++;
-			}
 		}
 	}
 
@@ -172,6 +161,7 @@ public:
 		}
 
 		list[pos1].append(new Edge_t(_pvertex1, _pvertex2));
+
 		if (this->directed == false)
 			list[_pvertex2->getIndex()].append(new Edge_t(_pvertex2, _pvertex1));
 		return list[pos1].last();
