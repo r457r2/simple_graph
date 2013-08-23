@@ -311,7 +311,7 @@ public:
 		return iter;
 	}
 
-	EdgeIterator EdgeBegin ()
+	EdgeIterator edgeBegin ()
 	{
 		EdgeIterator iter;
 		iter.graph = this->graph;
@@ -352,7 +352,7 @@ public:
 		return iter;
 	}
 
-	EdgeIterator EdgeEnd ()
+	EdgeIterator edgeEnd ()
 	{
 		EdgeIterator iter;
 		iter.graph = this->graph;
@@ -384,7 +384,7 @@ public:
 		return iter;
 	}
 
-	IncomingEdgeIterator IncomingEdgeBegin (Vertex_t* pvertex)
+	IncomingEdgeIterator incomingEdgeBegin (Vertex_t* pvertex)
 	{
 		IncomingEdgeIterator iter;
 		iter.graph = this->graph;
@@ -435,7 +435,7 @@ public:
 		return iter;
 	}
 
-	IncomingEdgeIterator IncomingEdgeEnd (Vertex_t* pvertex)
+	IncomingEdgeIterator incomingEdgeEnd (Vertex_t* pvertex)
 	{
 		IncomingEdgeIterator iter;
 		iter.graph = this->graph;
@@ -454,8 +454,68 @@ public:
 	ReprType getType(){return type;}
 
 	float getSaturationCoefficent (){return graph->getSaturationCoefficent();}
-	bool toListGraph (){return false;}//запилить преобразование!!!
-	bool toMatrixGraph (){return false;}//запилить преобразование!!!
+
+	bool toListGraph ()
+	{
+		if (type == LIST_REPR)
+			return false;
+
+		Representation<Vertex_t,Edge_t>* newGraph = new ListRepresentation<Vertex_t,Edge_t>(graph->isDirected());
+
+		for (int i = 0; i < graph->edgeCount(); i++)
+		{
+			Vertex_t* newVertex = newGraph->insertVertex();
+			*newVertex = *(graph->vertexes[i]);
+		}
+		for (int i = 0; i < graph->edgeCount(); i++)
+		{
+			for (int j = 0; j < ((ListRepresentation<Vertex_t,Edge_t>*)graph)->list[i].size(); j++)
+			{
+				if (graph->list[i][j] != NULL)
+				{
+					Edge_t* newEdge = newGraph->insertEdge(newGraph->vertexes[i], newGraph->vertexes[j]);
+					newEdge->setWeight() = ((ListRepresentation<Vertex_t,Edge_t>*)graph)->list[i][j]->getWeight();
+					newEdge->setData() = ((ListRepresentation<Vertex_t,Edge_t>*)graph)->list[i][j]->getData();
+				}
+			}
+		}
+
+		delete graph;
+		type = MATRIX_REPR;
+		graph = newGraph;
+
+		return true;
+	}
+
+	bool toMatrixGraph ()
+	{
+		if (type == MATRIX_REPR)
+			return false;
+
+		Representation<Vertex_t,Edge_t>* newGraph = new MatrixRepresentation<Vertex_t,Edge_t>(graph->isDirected());
+
+		for (int i = 0; i < graph->edgeCount(); i++)
+		{
+			Vertex_t* newVertex = newGraph->insertVertex();
+			*newVertex = *(graph->vertexes[i]);
+		}
+		for (int i = 0; i < graph->edgeCount(); i++)
+		{
+			for (int j = 0; j < ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[i].size(); j++)
+			{
+				Edge_t* newEdge = newGraph->insertEdge(newGraph->vertexes[i], newGraph->vertexes[j]);
+				newEdge->setWeight() = ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[i][j]->getWeight();
+				newEdge->setData() = ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[i][j]->getData();
+			}
+		}
+
+		delete graph;
+		type = LIST_REPR;
+		graph = newGraph;
+
+		return true;
+	}
+
 	Vertex_t* insertVertex (){return graph->insertVertex();}
 	bool deleteVertex (Vertex_t *_vertex1){return graph->deleteVertex(_vertex1);}
 	Edge_t* insertEdge (Vertex_t *_vertex1, Vertex_t *_vertex2){return graph->insertEdge(_vertex1, _vertex2);}

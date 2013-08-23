@@ -30,6 +30,13 @@ public:
 
 	int getIndex (){return index;}
 	void setIndex (int _index){index = _index;}
+
+	VertexDescriptor& operator= (VertexDescriptor& other)
+	{
+		name = other.getName();
+		data = other.getData();
+		index = other.getIndex();
+	}
 };
 
 #endif // VERTEX_DESCRIPTOR_H

@@ -24,4 +24,6 @@ HEADERS  += \
     Representation.h \
     ListRepresentation.h \
     MatrixRepresentation.h \
-    graphtest.h
+    graphtest.h \
+    TaskOne.h \
+    TaskTwo.h
