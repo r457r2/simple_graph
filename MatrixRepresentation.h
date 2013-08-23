@@ -123,7 +123,7 @@ public:
 		int index = this->vertexes.count() - 1;
 
 		matrix.append(QList<Edge_t *>());
-		for(int i = 0; i < index; i++)
+		for(int i = 0; i < index + 1; i++)
 		{
 			matrix[i].append(NULL);
 			if(i != index)
@@ -140,7 +140,7 @@ public:
 		// Regen indexes of remaining vertexes
 		// Remove all edges related to vertex
 		// Remove row and col from matrix
-		if(!belongs(v))
+		if(!this->belongs(v))
 			return false;
 		int index = v->getIndex();
 
@@ -170,20 +170,13 @@ public:
 		// And there is no such edge
 		int idx1 = v1->getIndex();
 		int idx2 = v2->getIndex();
-		if(!belongs(v1) || !belongs(v2) || matrix[idx1][idx2] != NULL)
+		if(!this->belongs(v1) || !this->belongs(v2) || matrix[idx1][idx2] != NULL)
 			return NULL;
 
-		Edge_t *e = new Edge_t;
-		e->setBegin(v1);
-		e->setEnd(v2);
+		Edge_t *e = new Edge_t(v1, v2);
 		matrix[idx1][idx2] = e;
 		if(this->directed)
-		{
-			Edge_t *e_reversed = new Edge_t;
-			e_reversed->setBegin(v2);
-			e_reversed->setEnd(v1);
-			matrix[idx2][idx1] = e_reversed;
-		}
+			matrix[idx2][idx1] = new Edge_t(v2, v1);
 		return e;
 	}
 
@@ -194,7 +187,7 @@ public:
 		// If graph is directed, remove reverse edge
 		int idx1 = v1->getIndex();
 		int idx2 = v2->getIndex();
-		if(!belongs(v1) || !belongs(v2) || matrix[idx1][idx2] == NULL)
+		if(!this->belongs(v1) || !this->belongs(v2) || matrix[idx1][idx2] == NULL)
 			return false;
 
 		delete matrix[idx1][idx2];
@@ -204,6 +197,7 @@ public:
 			delete matrix[idx2][idx1];
 			matrix[idx2][idx1] = NULL;
 		}
+		return true;
 	}
 };
 

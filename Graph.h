@@ -25,12 +25,12 @@ public:
 		graph = new ListRepresentation<Vertex_t, Edge_t>();
 	}
 
-	Graph (int numberOfVertex, bool _oriented, ReprType t = LIST_REPR) : type(t) // without edge
+	Graph (int numberOfVertex, bool _directed, ReprType t = LIST_REPR) : type(t) // without edge
 	{
 		if (type == MATRIX_REPR)
-			graph = new MatrixRepresentation<Vertex_t, Edge_t>(numberOfVertex, _oriented);
+			graph = new MatrixRepresentation<Vertex_t, Edge_t>(numberOfVertex, _directed);
 		else
-			graph = new ListRepresentation<Vertex_t, Edge_t>(numberOfVertex, _oriented);
+			graph = new ListRepresentation<Vertex_t, Edge_t>(numberOfVertex, _directed);
 	}
 
 	Graph (int numberOfVertex, int numberOfEdge, bool _directed, ReprType t = LIST_REPR) : type(t)//full

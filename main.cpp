@@ -4,7 +4,6 @@
 #include "VertexDescriptor.h"
 #include "EdgeDescriptor.h"
 #include "Graph.h"
-
 // tests
 #include "graphtest.h"
 
@@ -22,9 +21,9 @@ int main(int argc, char *argv[])
 	QList<int>::Iterator two = list.end();
 	two++;
 	if (one == two) qDebug() << "ok";
-	return 0;
+
 	GraphTest::correctnessTest();
 	GraphTest::loadTest();
-
+	return 0;
 	return app.exec();
 }
