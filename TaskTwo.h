@@ -21,10 +21,12 @@ private:
 	Graph<Vertex_t,Edge_t>* pgraph;
 	QVector<Vertex_t*> vertexes;
 
+	QVector<Vertex_t*>& solve(){}
+
 public:
-	TaskTwo(Graph<Vertex_t,Edge_t>* _pgraph)
+	TaskTwo(Graph<Vertex_t,Edge_t>* _pgraph) : pgraph(_pgraph)
 	{
-		this->set(_pgraph);
+		this->solve();
 	}
 
 	TaskTwo(TaskTwo& other)
@@ -34,11 +36,21 @@ public:
 
 	~TaskTwo(){}
 
-	QVector<Vertex_t*>& set(Graph<Vertex_t,Edge_t>* other) {}
+	QVector<Vertex_t*>& set(Graph<Vertex_t,Edge_t>* _pgraph)
+	{
+		this->pgraph = _pgraph;
+		return (this->solve());
+	}
 
-	QVector<Vertex_t*>& restart() {}
+	QVector<Vertex_t*>& restart()
+	{
+		return (this->solve());
+	}
 
-	QVector<Vertex_t*>& result() {}
+	QVector<Vertex_t*>& result()
+	{
+		return vertexes;//is it rigth?
+	}
 };
 
 #endif // TASKTWO_H
