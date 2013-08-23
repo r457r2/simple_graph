@@ -66,18 +66,12 @@ public:
 	~ListRepresentation ()
 	{
 		for (int i = 0; i < this->vertexes.size(); i++)
-		{
 			delete this->vertexes[i];
-		}
 
 		for (int i = 0; i < this->vertexes.size(); i++)
-		{
 			for (int j = 0; j < list[i].size(); j++)
-			{
 				delete list[i][j];
-			}
-		}
-	}\
+	}
 
 	int edgeCount ()
 	{
@@ -85,9 +79,8 @@ public:
 		if (this->directed == true)
 		{
 			for (int i = 0; i < this->vertexes.size(); i++)
-			{
 				edgeCount += list[i].size();
-			}
+
 			return edgeCount;
 		}
 
@@ -124,17 +117,13 @@ public:
 		int pos = _pvertex1->getIndex();
 
 		for (int i = 0; i < this->vertexes.size(); i++)
-		{
 			for (int j = 0; j < list[i].size(); j++)
-			{
 				if (list[i][j]->isComingTo(_pvertex1) == true)
 				{
 					delete list[i][j];
 					list[i].removeAt(j);
 					break;
 				}
-			}
-		}
 
 		delete this->vertexes[pos];
 		this->vertexes.removeOne(_pvertex1);

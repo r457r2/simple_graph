@@ -22,6 +22,13 @@ int main(int argc, char *argv[])
 	two++;
 	if (one == two) qDebug() << "ok";
 
+	for(int i = 0; i < 4; i++)
+	{
+		qDebug() << i;
+		if(i != 4)
+			qDebug() << i;
+	}
+
 	GraphTest::correctnessTest();
 	GraphTest::loadTest();
 	return 0;
