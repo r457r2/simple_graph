@@ -24,11 +24,11 @@ public:
 	ListRepresentation (int numberOfVertex, int numberOfEdge, bool _directed = false)
 		: Representation<Vertex_t, Edge_t>(_directed)
 	{
-		if (numberOfEdge > this->maxEdgesCount())
-			numberOfEdge = this->maxEdgesCount();
-
 		for (int i = 0; i < numberOfVertex; i++)
 			this->insertVertex();
+
+		if (numberOfEdge > this->maxEdgesCount())
+			numberOfEdge = this->maxEdgesCount();
 
 		qsrand(time_t(NULL));
 		for (int edgesInserted = 0; edgesInserted < numberOfEdge;)

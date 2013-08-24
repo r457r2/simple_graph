@@ -7,7 +7,9 @@
 #include "VertexDescriptor.h"
 #include "EdgeDescriptor.h"
 
-const ReprType GRAPH_REPR = MATRIX_REPR;
+#include <QDebug>
+
+const ReprType GRAPH_REPR = LIST_REPR;
 
 typedef VertexDescriptor<int, int> Vertex_t;
 typedef EdgeDescriptor<Vertex_t, int, int> Edge_t;
@@ -86,6 +88,15 @@ void GraphTest::correctnessTest()
 	assert(g.deleteVertex(v4) == true);
 	assert(g.vertexCount() == 0);
 	assert(g.edgeCount() == 0);
+
+	//other ctors
+	TestGraph g_vertexes(50, true, GRAPH_REPR);
+	assert(g_vertexes.vertexCount() == 50);
+	assert(g_vertexes.edgeCount() == 0);
+
+	TestGraph g_edges(400, 800, true, GRAPH_REPR);
+	assert(g_edges.vertexCount() == 400);
+	assert(g_edges.edgeCount() == 800);
 
 }
 

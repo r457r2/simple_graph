@@ -500,7 +500,7 @@ public:
 			*newVertex = *(graph->vertexes[i]);
 		}
 		for (int i = 0; i < graph->edgeCount(); i++)
-		{//(static_cast<ListRepresentation<Vertex_t,Edge_t>*>(graph))list
+		{
 			for (int j = 0; j < (static_cast<ListRepresentation<Vertex_t,Edge_t>*>(graph))->list[i].size(); j++)
 			{
 				Edge_t* newEdge = newGraph->insertEdge(newGraph->vertexes[i], newGraph->vertexes[j]);
