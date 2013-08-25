@@ -51,7 +51,7 @@ public:
 		return this->directed;
 	}
 
-	float getSaturationCoefficent ()
+	float getSaturationCoefficient ()
 	{
 		return (float) edgeCount() / maxEdgesCount();
 	}

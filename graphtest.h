@@ -5,6 +5,7 @@ class GraphTest
 {
 public:
 	static void correctnessTest();
+	static void iterTest();
 	static void loadTest();
 };
 

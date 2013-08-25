@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 	QApplication app(argc, argv);
 
 	//Graph<VertexDescriptor<string,int>, EdgeDescriptor<VertexDescriptor<string,int>,int,int> > one;
-	qDebug() << "Hello world!";
+//	qDebug() << "Hello world!";
 
 	QList<int> list;
 	QList<int>::Iterator one = list.begin();
@@ -22,15 +22,16 @@ int main(int argc, char *argv[])
 	two++;
 	if (one == two) qDebug() << "ok";
 
-	for(int i = 0; i < 4; i++)
-	{
-		qDebug() << i;
-		if(i != 4)
-			qDebug() << i;
-	}
+//	for(int i = 0; i < 4; i++)
+//	{
+//		qDebug() << i;
+//		if(i != 4)
+//			qDebug() << i;
+//	}
 
-	GraphTest::correctnessTest();
-	GraphTest::loadTest();
+	//GraphTest::correctnessTest();
+	GraphTest::iterTest();
+	//GraphTest::loadTest();
 	return 0;
 	return app.exec();
 }

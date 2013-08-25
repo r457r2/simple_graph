@@ -7,9 +7,7 @@
 #include "VertexDescriptor.h"
 #include "EdgeDescriptor.h"
 
-#include <QDebug>
-
-const ReprType GRAPH_REPR = LIST_REPR;
+const ReprType GRAPH_REPR = MATRIX_REPR;
 
 typedef VertexDescriptor<int, int> Vertex_t;
 typedef EdgeDescriptor<Vertex_t, int, int> Edge_t;
@@ -40,7 +38,7 @@ void GraphTest::correctnessTest()
 	assert(g.edgeCount() == 0);
 
 	// insert edge
-	Edge_t *e1 = g.insertEdge(v1, v2);
+	g.insertEdge(v1, v2);
 	assert(g.vertexCount() == 2);
 	assert(g.edgeCount() == 1);
 
@@ -98,6 +96,90 @@ void GraphTest::correctnessTest()
 	assert(g_edges.vertexCount() == 400);
 	assert(g_edges.edgeCount() == 800);
 
+	// TODO: transformation
+}
+
+void GraphTest::iterTest()
+{
+	{
+		TestGraph g_big(1200, 9540, true, GRAPH_REPR);
+
+		TestGraph::VertexIterator vi;
+		int i = 0;
+		for(vi = g_big.vertexBegin(); vi != g_big.vertexEnd(); ++vi, ++i)
+			(*vi)->setData(65536);
+		assert(i == 1200);
+
+		TestGraph::EdgeIterator ei;
+		i = 0;
+		for(ei = g_big.edgeBegin();	ei != g_big.edgeEnd(); ++ei, ++i)
+			(*ei)->setData(131052);
+		assert(i == 9540);
+	}
+
+	TestGraph in_out(0, true, GRAPH_REPR);
+	Vertex_t *v1 = in_out.insertVertex();
+	Vertex_t *v2 = in_out.insertVertex();
+	Vertex_t *v3 = in_out.insertVertex();
+	Vertex_t *v4 = in_out.insertVertex();
+	Vertex_t *v5 = in_out.insertVertex();
+	Vertex_t *v6 = in_out.insertVertex();
+	Vertex_t *v7 = in_out.insertVertex();
+	Vertex_t *v8 = in_out.insertVertex();
+	Vertex_t *v9 = in_out.insertVertex();
+
+	// for outgoing e-iter
+	in_out.insertEdge(v1, v2)->setData(12);
+	in_out.insertEdge(v1, v7)->setData(17);
+	in_out.insertEdge(v1, v5)->setData(15);
+	in_out.insertEdge(v1, v9)->setData(19);
+	in_out.insertEdge(v1, v4)->setData(14);
+	in_out.insertEdge(v1, v6)->setData(16);
+	in_out.insertEdge(v1, v1)->setData(11);
+
+	// dummy
+	in_out.insertEdge(v2, v3)->setData(23);
+	in_out.insertEdge(v7, v6)->setData(76);
+	in_out.insertEdge(v8, v6)->setData(86);
+	in_out.insertEdge(v5, v3)->setData(53);
+	in_out.insertEdge(v6, v2)->setData(62);
+	in_out.insertEdge(v4, v4)->setData(44);
+	in_out.insertEdge(v5, v4)->setData(54);
+	in_out.insertEdge(v7, v7)->setData(77);
+	in_out.insertEdge(v7, v7);
+	in_out.insertEdge(v7, v2)->setData(72);
+	in_out.insertEdge(v4, v6)->setData(46);
+	in_out.insertEdge(v7, v4)->setData(74);
+	in_out.insertEdge(v3, v8)->setData(38);
+
+	// for incoming e-iter
+	in_out.insertEdge(v2, v9)->setData(28);
+	in_out.insertEdge(v5, v9)->setData(59);
+	in_out.insertEdge(v8, v9)->setData(89);
+	in_out.insertEdge(v3, v9)->setData(39);
+	in_out.insertEdge(v4, v9)->setData(49);
+	in_out.insertEdge(v9, v9)->setData(99);
+
+	assert(in_out.vertexCount() == 9);
+	assert(in_out.edgeCount() == 25);
+
+	int i = 0;
+	TestGraph::EdgeIterator ei2;
+	for(ei2 = in_out.edgeBegin(); ei2 != in_out.edgeEnd(); ++ei2, ++i)
+		(*ei2)->getData();
+	assert(i == 25);
+
+	i = 0;
+	TestGraph::OutgoingEdgeIterator oi;
+	for(oi = in_out.outgoingEdgeBegin(v1); oi != in_out.outgoingEdgeEnd(v1); ++oi, ++i)
+		(*oi)->setWeight(3948212);
+	assert(i == 7);
+
+	i = 0;
+	TestGraph::IncomingEdgeIterator ii;
+	for(ii = in_out.incomingEdgeBegin(v9); ii != in_out.incomingEdgeEnd(v9); ++ii, ++i)
+		(*ii)->setData(4987935);
+	assert(i == 7);
 }
 
 void GraphTest::loadTest()
