@@ -29,9 +29,9 @@ int main(int argc, char *argv[])
 //			qDebug() << i;
 //	}
 
-	//GraphTest::correctnessTest();
+	GraphTest::correctnessTest();
 	GraphTest::iterTest();
-	//GraphTest::loadTest();
+	GraphTest::loadTest(10000, 90000, 10000);
 	return 0;
 	return app.exec();
 }
