@@ -6,6 +6,8 @@
 #include "Graph.h"
 // tests
 #include "graphtest.h"
+//tasks
+#include "TaskTwo.h"
 
 using namespace std;
 
@@ -13,24 +15,12 @@ int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
 
-	//Graph<VertexDescriptor<string,int>, EdgeDescriptor<VertexDescriptor<string,int>,int,int> > one;
-	qDebug() << "Hello world!";
+	Graph<VertexDescriptor<string,int>, EdgeDescriptor<VertexDescriptor<string,int>,int,int> > one(6,14);
 
-	QList<int> list;
-	QList<int>::Iterator one = list.begin();
-	QList<int>::Iterator two = list.end();
-	two++;
-	if (one == two) qDebug() << "ok";
+	VertexDescriptor<string,int>* other = *(one.vertexBegin());
 
-	for(int i = 0; i < 4; i++)
-	{
-		qDebug() << i;
-		if(i != 4)
-			qDebug() << i;
-	}
+	TaskTwo<VertexDescriptor<string,int>, EdgeDescriptor<VertexDescriptor<string,int>,int,int> > two(&one, other);
 
-	GraphTest::correctnessTest();
-	GraphTest::loadTest();
 	return 0;
 	return app.exec();
 }

@@ -18,38 +18,128 @@ template <typename Vertex_t, typename Edge_t>
 class TaskTwo
 {
 private:
-	Graph<Vertex_t,Edge_t>* pgraph;
-	QVector<Vertex_t*> vertexes;
+	Graph<Vertex_t,Edge_t>* pgraph;	
+	Vertex_t* pvertex;
+	int vrtxCount;
+	int* pathSize;//lenth and parent
 
-	QVector<Vertex_t*>& solve(){}
+	void prepTask (Vertex_t* pvrtx)
+	{
+		pvertex = pvrtx;
+		vrtxCount = pgraph->vertexCount();
+
+		delete []pathSize;
+		pathSize = new int[vrtxCount * 2];
+
+		for (int i = 0; i < vrtxCount; i++)
+		{
+			this->pathSize[0 + i] = INT_MAX;
+			this->pathSize[vrtxCount + i] = -1;
+		}
+		pathSize[pvrtx->getIndex()] = 0;
+	}
+
+	bool solve()
+	{
+		for (int i = 1; i <= vrtxCount - 1; i++)
+		{
+			typename Graph<Vertex_t,Edge_t>::EdgeIterator eiter = pgraph->edgeBegin();
+			while (eiter != pgraph->edgeEnd())
+			{
+				Vertex_t* from = (*eiter)->getBegin();
+				Vertex_t* to = (*eiter)->getEnd();
+
+				if (pathSize[from->getIndex()] != INT_MAX)
+				{
+					if (pathSize[to->getIndex()] > (pathSize[from->getIndex()] + (*eiter)->getWeight()))
+					{
+						pathSize[to->getIndex()] = (pathSize[from->getIndex()] + (*eiter)->getWeight());
+						pathSize[vrtxCount + to->getIndex()] = from->getIndex();
+					}
+				}
+				eiter++;
+			}
+
+			eiter = pgraph->edgeBegin();
+			while (eiter != pgraph->edgeEnd())
+			{
+				Vertex_t* from = (*eiter)->getBegin();
+				Vertex_t* to = (*eiter)->getEnd();
+
+				if (pathSize[to->getIndex()] > (pathSize[from->getIndex()] + (*eiter)->getWeight()))
+					return false;
+				eiter++;
+			}
+
+			return true;
+		}
+//		for i ←1 to | V[G] | - 1
+//		5.      do for для каждого ребра (u, v)E[G]
+//		6.               do Relax (u, v, w)
+//		7.  for для каждого ребра (u, v)E[G]
+//		8.           do if d[v]>d[u] + w(u, v)
+//		9.                    then return FALSE
+//		10. return TRUE.
+	}
 
 public:
-	TaskTwo(Graph<Vertex_t,Edge_t>* _pgraph) : pgraph(_pgraph)
+	TaskTwo(Graph<Vertex_t,Edge_t>* _pgraph, Vertex_t* pvrtx) : pgraph(_pgraph)
 	{
+		pvertex = pvrtx;
+		vrtxCount = pgraph->vertexCount();
+		pathSize = new int[vrtxCount * 2];
+
+		for (int i = 0; i < vrtxCount; i++)
+		{
+			this->pathSize[0 + i] = INT_MAX;
+			this->pathSize[vrtxCount + i] = -1;;
+		}
+		pathSize[pvrtx->getIndex()] = 0;
+
 		this->solve();
 	}
 
 	TaskTwo(TaskTwo& other)
 	{
 		this->pgraph = other.pgraph;
+		this->pvertex = other.pvertex;
+		this->vrtxCount = other.vrtxCount;
+		pathSize = new int[vrtxCount * 2];
+
+		for (int i = 0; i < vrtxCount; i++)
+		{
+			this->pathSize[0 + i] = other.pathSize[0 + i];
+			this->pathSize[vrtxCount + i] = other.pathSize[vrtxCount + i];
+		}
 	}
 
-	~TaskTwo(){}
+	~TaskTwo(){delete []pathSize;}
 
-	QVector<Vertex_t*>& set(Graph<Vertex_t,Edge_t>* _pgraph)
+	bool set(Graph<Vertex_t,Edge_t>* pgrph, Vertex_t* pvrtx)
 	{
-		this->pgraph = _pgraph;
+		this->pgraph = pgrph;
+		this->prepTask(pvrtx);
 		return (this->solve());
 	}
 
-	QVector<Vertex_t*>& restart()
+	bool restart(Vertex_t* pvrtx)
 	{
+		this->prepTask(pvrtx);
 		return (this->solve());
 	}
 
-	QVector<Vertex_t*>& result()
+	bool restart()
 	{
-		return vertexes;//is it rigth?
+		this->prepTask(pvertex);
+		return (this->solve());
+	}
+	
+	void result()
+	{
+		for (int i = 0; i < vrtxCount; i++)
+		{
+			qDebug() << pathSize[i] << " : " << pathSize[vrtxCount + i];
+		}
 	}
 };
 

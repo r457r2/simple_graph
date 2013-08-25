@@ -12,10 +12,13 @@ private:
 
 public:
 	EdgeDescriptor (Vertex_t* _from, Vertex_t* _to) : from(_from), to(_to){}
+
 	EdgeDescriptor (Vertex_t* _from, Vertex_t* _to, Weight_t _weight) :
 		from(_from), to(_to), weight(_weight){}
+
 	EdgeDescriptor (Vertex_t* _from, Vertex_t* _to, Weight_t _weight, Data_t _data) :
 		from(_from), to(_to), weight(_weight), data(_data){}
+
 	~EdgeDescriptor (){}
 
 	Vertex_t* getBegin (){return from;}
