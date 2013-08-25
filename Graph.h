@@ -3,7 +3,6 @@
 #include "Representation.h"
 #include "ListRepresentation.h"
 #include "MatrixRepresentation.h"
-//в этом классе реализованы все методы, кроме преобразований.
 
 enum ReprType
 {
@@ -17,34 +16,36 @@ class Graph
 private:
 	ReprType type;
 	Representation<Vertex_t, Edge_t>* graph;
+	typedef ListRepresentation<Vertex_t, Edge_t> ListRepr_t;
+	typedef MatrixRepresentation<Vertex_t, Edge_t> MatrixRepr_t;
 
 public:
 
 	Graph () : type(LIST_REPR) // empty L-graph
 	{
-		graph = new ListRepresentation<Vertex_t, Edge_t>();
+		graph = new ListRepr_t();
 	}
 
 	Graph (int numberOfVertex, bool _directed, ReprType t = LIST_REPR) : type(t) // without edge
 	{
 		if (type == MATRIX_REPR)
-			graph = new MatrixRepresentation<Vertex_t, Edge_t>(numberOfVertex, _directed);
+			graph = new MatrixRepr_t(numberOfVertex, _directed);
 		else
-			graph = new ListRepresentation<Vertex_t, Edge_t>(numberOfVertex, _directed);
+			graph = new ListRepr_t(numberOfVertex, _directed);
 	}
 
 	Graph (int numberOfVertex, int numberOfEdge, bool _directed, ReprType t = LIST_REPR) : type(t)//full
 	{
 		if (type == MATRIX_REPR)
-			graph = new MatrixRepresentation<Vertex_t, Edge_t>(numberOfVertex, numberOfEdge, _directed);
+			graph = new MatrixRepr_t(numberOfVertex, numberOfEdge, _directed);
 		else
-			graph = new ListRepresentation<Vertex_t, Edge_t>(numberOfVertex, numberOfEdge, _directed);
+			graph = new ListRepr_t(numberOfVertex, numberOfEdge, _directed);
 	}
 
 	Graph (Graph &one)
 	{
-		if (one.type == MATRIX_REPR) graph = new MatrixRepresentation<Vertex_t, Edge_t>(one);
-		else graph = new ListRepresentation<Vertex_t, Edge_t>(one);
+		if (one.type == MATRIX_REPR) graph = new MatrixRepr_t(one);
+		else graph = new ListRepr_t(one);
 	}
 
 	~Graph ()
@@ -55,6 +56,7 @@ public:
 	class VertexIterator
 	{
 	private:
+		friend class Graph;
 		typename QList<Vertex_t*>::Iterator iter;
 
 	public:
@@ -66,18 +68,18 @@ public:
 			return *this;
 		}
 
-		bool operator== (VertexIterator& other)
+		bool operator== (const VertexIterator& other)
 		{
 			return (this->iter == other.iter);
 		}
 
-		VertexIterator& operator= (VertexIterator& other)
+		VertexIterator& operator= (const VertexIterator& other)
 		{
 			this->iter = other.iter;
 			return *this;
 		}
 
-		bool operator!= (VertexIterator& other)
+		bool operator!= (const VertexIterator& other)
 		{
 			return (this->iter != other.iter);
 		}
@@ -91,7 +93,9 @@ public:
 	class EdgeIterator
 	{
 	private:
-		Representation<Vertex_t,Edge_t>* graph;
+		friend class Graph;
+		ReprType type;
+		Representation<Vertex_t, Edge_t>* graph;
 		typename QList<Vertex_t*>::Iterator vertex;
 		typename QList<Edge_t*>::Iterator edge;
 
@@ -103,58 +107,69 @@ public:
 			if (type == LIST_REPR)
 			{
 				edge++;
-				while (edge == ((ListRepresentation<Vertex_t,Edge_t>*)graph)->list[(*vertex)->getIndex()].end())
+				while (edge == ((ListRepr_t*)graph)->list[(*vertex)->getIndex()].end())
 				{
 					vertex++;
 					if (vertex == graph->vertexes.end())
 					{
-						edge = ((ListRepresentation<Vertex_t,Edge_t>*)graph)->list[graph->vertexCount() - 1].end();
+						edge = ((ListRepr_t*)graph)->list[graph->vertexCount() - 1].end();
 						break;
 					}
-					edge = ((ListRepresentation<Vertex_t,Edge_t>*)graph)->list[(*vertex)->getIndex()].begin();
+					edge = ((ListRepr_t*)graph)->list[(*vertex)->getIndex()].begin();
 				}
 			}
 			else
 			{
 				edge++;
-				while (*edge == NULL)
+				while (*edge == NULL
+					  || edge == ((MatrixRepr_t*)graph)->matrix[(*vertex)->getIndex()].end())
 				{
-					edge++;
-					if (edge == ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[*vertex->getIndex()].end())
+					if (edge == ((MatrixRepr_t*)graph)->matrix[(*vertex)->getIndex()].end())
 					{
 						vertex++;
 						if (vertex == graph->vertexes.end())
 						{
-							edge = ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[graph->vertexCount() - 1].end();
+							edge = ((MatrixRepr_t*)graph)->matrix[graph->vertexCount() - 1].end();
 							break;
 						}
-						edge = ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[*vertex->getIndex()].begin();
+						edge = ((MatrixRepr_t*)graph)->matrix[(*vertex)->getIndex()].begin();
 					}
+					if(*edge == NULL)
+						edge++;
 				}
 			}
 			return *this;
 		}
 
-		bool operator== (EdgeIterator& other)
+		// Reason to put const.
+		// You write this:
+		// Graph::EdgeIterator it = g.edgeBegin();
+		// while (it != g.edgeEnd()) <- and compiler refuses to compile this:
+		// no matching operator!=
+		// It is because you cannot bind a temporary object (which is created in
+		// that expression) to a non-const reference.
+		// Probably. At least it compiles.
+		bool operator== (const EdgeIterator& other)
 		{
-			return ((this->graph == other.graph) &&
-					(this->vertex == other.vertex) &&
-					(this->edge == other.edge));
+			return ((this->vertex == other.vertex)
+					&& (this->edge == other.edge));
 		}
 
-		EdgeIterator& operator= (EdgeIterator& other)
+		// Okay, put const here. But what if it is self-assignment?
+		// We should spend some more time understanding this const-things.
+		EdgeIterator& operator=(const EdgeIterator& other)
 		{
+			this->type = other.type;
 			this->graph = other.graph;
 			this->vertex = other.vertex;
 			this->edge = other.edge;
 			return *this;
 		}
 
-		bool operator!= (EdgeIterator& other)
+		bool operator!=(const EdgeIterator& other)
 		{
-			return ((this->graph != other.graph) &&
-					(this->vertex != other.vertex) &&
-					(this->edge != other.edge));
+			return ((this->vertex != other.vertex)
+					|| (this->edge != other.edge));
 		}
 
 		Edge_t* operator* ()
@@ -166,7 +181,9 @@ public:
 	class OutgoingEdgeIterator
 	{
 	private:
+		friend class Graph;
 		typename QList<Edge_t*>::Iterator edge;
+		const QList<Edge_t *> *row;
 
 	public:
 		OutgoingEdgeIterator(){}
@@ -174,23 +191,28 @@ public:
 		OutgoingEdgeIterator& operator++ ()
 		{
 			edge++;
+			while(edge != row->end() && *edge == NULL)
+				edge++;
 			return *this;
 		}
 
-		bool operator== (OutgoingEdgeIterator& other)
+		bool operator== (const OutgoingEdgeIterator& other)
 		{
-			return (this->edge == other.edge);
+			return ((this->edge == other.edge)
+					&& (this->row = other.row));
 		}
 
-		OutgoingEdgeIterator& operator= (OutgoingEdgeIterator& other)
+		OutgoingEdgeIterator& operator= (const OutgoingEdgeIterator& other)
 		{
 			this->edge = other.edge;
+			this->row  = other.row;
 			return *this;
 		}
 
-		bool operator!= (OutgoingEdgeIterator& other)
+		bool operator!= (const OutgoingEdgeIterator& other)
 		{
-			return (this->edge != other.edge);
+			return ((this->edge != other.edge)
+					|| (this->row != other.row));
 		}
 
 		Edge_t* operator* ()
@@ -202,98 +224,42 @@ public:
 	class IncomingEdgeIterator
 	{
 	private:
-		Representation<Vertex_t,Edge_t>* graph;
-		Vertex_t* pvertex;
-		typename QList<Vertex_t*>::Iterator vertex;
-		typename QList<Edge_t*>::Iterator edge;
+		friend class Graph;
+		Vertex_t* ptarget;
+		Graph<Vertex_t, Edge_t>::EdgeIterator iter;
+		Graph<Vertex_t, Edge_t> *g;
 
 	public:
-		IncomingEdgeIterator(){}
-
-		IncomingEdgeIterator& operator++ ()
+		IncomingEdgeIterator() {}
+		IncomingEdgeIterator& operator++()
 		{
-			vertex++;
-			if (type == LIST_REPR)
-			{
-				bool isSet = false;
-				if (vertex == graph->vertexes.end())
-				{
-					edge = ((ListRepresentation<Vertex_t,Edge_t>*)graph)->list[graph->vertexCount() - 1].end();
-					return *this;
-				}
-				for (; vertex != graph->vertexes.end(); vertex++)
-				{
-					for (edge = ((ListRepresentation<Vertex_t,Edge_t>*)graph)->list[(*vertex)->getIndex()].begin();
-						 edge != ((ListRepresentation<Vertex_t,Edge_t>*)graph)->list[(*vertex)->getIndex()].end();
-						 edge++)
-					{
-						if (*edge->getEnd() == pvertex)
-						{
-							isSet = true;
-							break;
-						}
-					}
-					if (isSet)
-						break;
-				}
-			}
-			else
-			{
-				bool isSet = false;
-				if (vertex == graph->vertexes.end())
-				{
-					edge = ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[graph->vertexCount() - 1].end();
-					return *this;
-				}
-				for (; vertex != graph->vertexes.end(); vertex++)
-				{
-					if (((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[*vertex->getIndex()][pvertex->getIndex] != NULL)
-					{
-						isSet = true;
-						edge = ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[*vertex->getIndex()].begin();
-						edge += pvertex->getIndex();
-						break;
-					}
-					if (isSet)
-						break;
-				}
-				if (!isSet)
-				{
-					edge = ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[graph->vertexCount() - 1].end();
-				}
-
-			}
+			++iter;
+			while(iter != g->edgeEnd() && !(*iter)->isComingTo(ptarget))
+				++iter;
 			return *this;
 		}
 
-		bool operator== (IncomingEdgeIterator& other)
+		bool operator==(const IncomingEdgeIterator &other)
 		{
-			return ((this->graph == other.graph) &&
-					(this->vertex == other.vertex) &&
-					(this->pvertex == other.pvertex) &&
-					(this->edge == other.edge));
+			return (iter == other.iter) && (ptarget == other.ptarget);
 		}
 
-		IncomingEdgeIterator& operator= (IncomingEdgeIterator& other)
+		bool operator!=(const IncomingEdgeIterator &other)
 		{
-			this->graph = other.graph;
-			this->pvertex = other.pvertex;
-			this->vertex = other.vertex;
-			this->edge = other.edge;
+			return (iter != other.iter) || (ptarget != other.ptarget);
+		}
+
+		IncomingEdgeIterator &operator=(const IncomingEdgeIterator &other)
+		{
+			iter = other.iter;
+			g = other.g;
+			ptarget = other.ptarget;
 			return *this;
 		}
 
-		bool operator!= (IncomingEdgeIterator& other)
+		Edge_t *operator*()
 		{
-			return ((this->graph != other.graph) &&
-					(this->vertex != other.vertex) &&
-					(this->pvertex != other.pvertex) &&
-					(this->edge != other.edge));
-		}
-
-		Edge_t* operator* ()
-		{
-			return *edge;
+			return *iter;
 		}
 	};
 
@@ -314,40 +280,29 @@ public:
 	EdgeIterator edgeBegin ()
 	{
 		EdgeIterator iter;
+		iter.type = type;
 		iter.graph = this->graph;
 		iter.vertex = this->graph->vertexes.begin();
 
 		if (type == LIST_REPR)
 		{
-			iter.edge = ((ListRepresentation<Vertex_t,Edge_t>*)graph)->list[(*iter.vertex)->getIndex()].begin();
-			while (iter.edge == ((ListRepresentation<Vertex_t,Edge_t>*)graph)->list[(*iter.vertex)->getIndex()].end())
+			iter.edge = ((ListRepr_t*)graph)->list[(*iter.vertex)->getIndex()].begin();
+			while (iter.edge == ((ListRepr_t*)graph)->list[(*iter.vertex)->getIndex()].end())
 			{
 				iter.vertex++;
 				if (iter.vertex == graph->vertexes.end())
 				{
-					iter.edge = ((ListRepresentation<Vertex_t,Edge_t>*)graph)->list[graph->vertexCount() - 1].end();
+					iter.edge = ((ListRepr_t*)graph)->list[graph->vertexCount() - 1].end();
 					break;
 				}
-				iter.edge = ((ListRepresentation<Vertex_t,Edge_t>*)graph)->list[(*iter.vertex)->getIndex()].begin();
+				iter.edge = ((ListRepr_t*)graph)->list[(*iter.vertex)->getIndex()].begin();
 			}
 		}
 		else
 		{
-			iter.edge = ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[*iter.vertex->getIndex()].begin();
-			while (*iter.edge == NULL)
-			{
-				iter.edge++;
-				if (iter.edge == ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[*iter.vertex->getIndex()].end())
-				{
-					iter.vertex++;
-					if (iter.vertex == graph->vertexes.end())
-					{
-						iter.edge = ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[graph->vertexCount() - 1].end();
-						break;
-					}
-					iter.edge = ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[*iter.vertex->getIndex()].begin();
-				}
-			}
+			iter.edge = ((MatrixRepr_t*)graph)->matrix[(*iter.vertex)->getIndex()].begin();
+			if(*iter == NULL)
+				++iter;
 		}
 		return iter;
 	}
@@ -355,12 +310,13 @@ public:
 	EdgeIterator edgeEnd ()
 	{
 		EdgeIterator iter;
+		iter.type = type;
 		iter.graph = this->graph;
 		iter.vertex = this->graph->vertexes.end();
 		if (type == LIST_REPR)
-			iter.edge = ((ListRepresentation<Vertex_t,Edge_t>*)graph)->list[iter.graph->vertexCount() - 1].end();
+			iter.edge = ((ListRepr_t*)graph)->list[iter.graph->vertexCount() - 1].end();
 		else
-			iter.edge = ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[iter.graph->vertexCount() - 1].end();
+			iter.edge = ((MatrixRepr_t*)graph)->matrix[iter.graph->vertexCount() - 1].end();
 		return iter;
 	}
 
@@ -368,9 +324,15 @@ public:
 	{
 		OutgoingEdgeIterator iter;
 		if (type == LIST_REPR)
-			iter.edge = ((ListRepresentation<Vertex_t,Edge_t>*)graph)->list[pvertex->getIndex()].begin();
+		{
+			iter.row = &(((ListRepr_t*)graph)->list[pvertex->getIndex()]);
+			iter.edge = ((ListRepr_t*)graph)->list[pvertex->getIndex()].begin();
+		}
 		else
-			iter.edge = ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[pvertex->getIndex()].begin();
+		{
+			iter.row = &(((MatrixRepr_t*)graph)->matrix[pvertex->getIndex()]);
+			iter.edge = ((MatrixRepr_t*)graph)->matrix[pvertex->getIndex()].begin();
+		}
 		return iter;
 	}
 
@@ -378,89 +340,52 @@ public:
 	{
 		OutgoingEdgeIterator iter;
 		if (type == LIST_REPR)
-			iter.edge = ((ListRepresentation<Vertex_t,Edge_t>*)graph)->list[pvertex->getIndex()].end();
-		else
-			iter.edge = ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[pvertex->getIndex()].end();
-		return iter;
-	}
-
-	IncomingEdgeIterator incomingEdgeBegin (Vertex_t* pvertex)
-	{
-		IncomingEdgeIterator iter;
-		iter.graph = this->graph;
-		iter.pvertex = pvertex;
-		iter.vertex = this->graph->vertexes.begin();
-
-		if (type == LIST_REPR)
 		{
-			bool isSet = false;
-			for (typename QList<Vertex_t*>::Iterator i = iter.graph->vertexes.begin(); i != iter.graph->vertexes.end(); i++)
-			{
-				for (typename QList<Edge_t*>::Iterator j = ((ListRepresentation<Vertex_t,Edge_t>*)(iter.graph))->list[(*i)->getIndex()].begin();
-					 j != ((ListRepresentation<Vertex_t,Edge_t>*)(iter.graph))->list[(*i)->getIndex()].end();
-					 j++)
-				{
-					if (*j->getEnd() == pvertex)
-					{
-						isSet = true;
-						iter.edge = j;
-						break;
-					}
-				}
-				if (isSet)
-					break;
-			}
+			iter.row = &(((ListRepr_t*)graph)->list[pvertex->getIndex()]);
+			iter.edge = ((ListRepr_t*)graph)->list[pvertex->getIndex()].end();
 		}
 		else
 		{
-			bool isSet = false;
-			for (typename QList<Vertex_t*>::Iterator i = iter.graph->vertexes.begin(); i != iter.graph->vertexes.end(); i++)
-			{
-				if (((MatrixRepresentation<Vertex_t,Edge_t>*)(iter.graph))->matrix[*i->getIndex()][pvertex->getIndex] != NULL)
-				{
-					isSet = true;
-					iter.edge = ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[*iter.vertex->getIndex()].begin();
-					iter.edge += iter.pvertex->getIndex();
-					break;
-				}
-				if (isSet)
-					break;
-			}
-			if (!isSet)
-			{
-				iter.edge = ((MatrixRepresentation<Vertex_t,Edge_t>*)(iter.graph))->matrix[iter.graph->vertexCount() - 1].end();
-			}
-
+			iter.row = &(((MatrixRepr_t*)graph)->matrix[pvertex->getIndex()]);
+			iter.edge = ((MatrixRepr_t*)graph)->matrix[pvertex->getIndex()].end();
 		}
 		return iter;
 	}
 
-	IncomingEdgeIterator incomingEdgeEnd (Vertex_t* pvertex)
+	IncomingEdgeIterator incomingEdgeBegin(Vertex_t *pv)
 	{
 		IncomingEdgeIterator iter;
-		iter.graph = this->graph;
-		iter.pvertex = pvertex;
-		iter.vertex = this->graph->vertexes.end();
-		if (type == LIST_REPR)
-			iter.edge = ((ListRepresentation<Vertex_t,Edge_t>*)graph)->list[iter.graph->vertexCount() - 1].end();
-		else
-			iter.edge = ((MatrixRepresentation<Vertex_t,Edge_t>*)graph)->matrix[iter.graph->vertexCount() - 1].end();
+		iter.g = this;
+		iter.ptarget = pv;
+		iter.iter = this->edgeBegin();
+		if(!(*iter.iter)->isComingTo(pv))
+			++iter;
 		return iter;
 	}
+
+	IncomingEdgeIterator incomingEdgeEnd(Vertex_t *pv)
+	{
+		IncomingEdgeIterator iter;
+		iter.g = this;
+		iter.ptarget = pv;
+		iter.iter = this->edgeEnd();
+		return iter;
+	}
+
 	
 	int vertexCount (){return graph->vertexCount();}
 	int edgeCount (){return graph->edgeCount();}
 	bool isDirected (){return graph->isDirected();}
 	ReprType getType(){return type;}
 
-	float getSaturationCoefficent (){return graph->getSaturationCoefficent();}
+	float getSaturationCoeffiicent (){return graph->getSaturationCoefficient();}
 
 	bool toListGraph ()
 	{
 		if (type == LIST_REPR)
 			return false;
 
-		Representation<Vertex_t,Edge_t>* newGraph = new ListRepresentation<Vertex_t,Edge_t>(graph->isDirected());
+		Representation<Vertex_t, Edge_t>* newGraph = new ListRepr_t(graph->isDirected());
 
 		for (int i = 0; i < graph->vertexCount(); i++)
 		{
@@ -471,11 +396,11 @@ public:
 		{
 			for (int j = 0; j < graph->vertexCount(); j++)
 			{
-				if ((static_cast<MatrixRepresentation<Vertex_t,Edge_t>*>(graph))->matrix[i][j] != NULL)
+				if ((static_cast<MatrixRepr_t*>(graph))->matrix[i][j] != NULL)
 				{
 					Edge_t* newEdge = newGraph->insertEdge(newGraph->vertexes[i], newGraph->vertexes[j]);
-					newEdge->setWeight() = (static_cast<MatrixRepresentation<Vertex_t,Edge_t>*>(graph))->matrix[i][j]->getWeight();
-					newEdge->setData() = (static_cast<MatrixRepresentation<Vertex_t,Edge_t>*>(graph))->matrix[i][j]->getData();
+					newEdge->setWeight() = (static_cast<MatrixRepr_t*>(graph))->matrix[i][j]->getWeight();
+					newEdge->setData() = (static_cast<MatrixRepr_t*>(graph))->matrix[i][j]->getData();
 				}
 			}
 		}
@@ -492,7 +417,7 @@ public:
 		if (type == MATRIX_REPR)
 			return false;
 
-		Representation<Vertex_t,Edge_t>* newGraph = new MatrixRepresentation<Vertex_t,Edge_t>(graph->isDirected());
+		Representation<Vertex_t, Edge_t>* newGraph = new MatrixRepr_t(graph->isDirected());
 
 		for (int i = 0; i < graph->edgeCount(); i++)
 		{
@@ -500,12 +425,12 @@ public:
 			*newVertex = *(graph->vertexes[i]);
 		}
 		for (int i = 0; i < graph->edgeCount(); i++)
-		{//(static_cast<ListRepresentation<Vertex_t,Edge_t>*>(graph))list
-			for (int j = 0; j < (static_cast<ListRepresentation<Vertex_t,Edge_t>*>(graph))->list[i].size(); j++)
+		{
+			for (int j = 0; j < (static_cast<ListRepr_t*>(graph))->list[i].size(); j++)
 			{
 				Edge_t* newEdge = newGraph->insertEdge(newGraph->vertexes[i], newGraph->vertexes[j]);
-				newEdge->setWeight() = (static_cast<ListRepresentation<Vertex_t,Edge_t>*>(graph))->list[i][j]->getWeight();
-				newEdge->setData() = (static_cast<ListRepresentation<Vertex_t,Edge_t>*>(graph))->list[i][j]->getData();
+				newEdge->setWeight() = (static_cast<ListRepr_t*>(graph))->list[i][j]->getWeight();
+				newEdge->setData() = (static_cast<ListRepr_t*>(graph))->list[i][j]->getData();
 			}
 		}
 

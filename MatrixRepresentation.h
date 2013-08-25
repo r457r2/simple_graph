@@ -42,7 +42,6 @@ public:
 		{
 			int from = qrand() % numberOfVertex;
 			int to   = qrand() % numberOfVertex;
-
 			if(insertEdge(this->vertexes[from], this->vertexes[to]))
 				edgesCreated++;
 		}
@@ -107,7 +106,7 @@ public:
 					count++;
 			}
 		}
-		if(this->directed)
+		if(!this->directed)
 			return count/2 + loops;
 		else
 			return count + loops;
@@ -175,7 +174,7 @@ public:
 
 		Edge_t *e = new Edge_t(v1, v2);
 		matrix[idx1][idx2] = e;
-		if(this->directed)
+		if(!this->directed && idx1 != idx2) // if edge is not loop edge
 			matrix[idx2][idx1] = new Edge_t(v2, v1);
 		return e;
 	}
@@ -192,7 +191,7 @@ public:
 
 		delete matrix[idx1][idx2];
 		matrix[idx1][idx2] = NULL;
-		if(this->directed)
+		if(!this->directed && idx1 != idx2)
 		{
 			delete matrix[idx2][idx1];
 			matrix[idx2][idx1] = NULL;

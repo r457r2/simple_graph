@@ -15,9 +15,11 @@ int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
 
+
 	Graph<VertexDescriptor<string,int>, EdgeDescriptor<VertexDescriptor<string,int>,int,int> > one(6,14);
 
 	VertexDescriptor<string,int>* other = *(one.vertexBegin());
+
 
 	TaskTwo<VertexDescriptor<string,int>, EdgeDescriptor<VertexDescriptor<string,int>,int,int> > two(&one, other);
 
