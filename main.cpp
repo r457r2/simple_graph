@@ -45,11 +45,6 @@ int main(int argc, char *argv[])
 //	for(oii = g_small.outgoingEdgeBegin(*vii); oii != g_small.outgoingEdgeEnd(*vii); ++oii)
 //		qDebug() << (*oii);
 
-
-
-
-
-
 	return 0;
 	return app.exec();
 }

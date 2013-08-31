@@ -1,5 +1,6 @@
 #include "graphtest.h"
 
+#include <QTime>
 #include <iostream>
 #include <assert.h>
 
@@ -8,6 +9,8 @@
 #include "EdgeDescriptor.h"
 
 const ReprType GRAPH_REPR = LIST_REPR;
+const bool DIRECTED = true;
+
 
 typedef VertexDescriptor<int, int> Vertex_t;
 typedef EdgeDescriptor<Vertex_t, int, int> Edge_t;
@@ -192,7 +195,55 @@ void GraphTest::iterTest()
 	assert(i == 3);
 }
 
-void GraphTest::loadTest()
+void GraphTest::loadTest(int nvtxs, int nedges, int niters)
 {
+	std::cout << "Load test\n";
+	std::cout << "Creating graph with " << nvtxs << " vertexes and "
+			  << nedges << " edges... " << std::flush;
+	QTime t;
+	t.start();
+	TestGraph g(nvtxs, nedges, DIRECTED, GRAPH_REPR);
+	std::cout << "took " << t.elapsed() << " ms" << std::endl;
+	assert(g.vertexCount() == nvtxs);
+	assert(g.edgeCount() == nedges);
 
+	t.start();
+	std::cout << "Iterating over vertexes... " << std::flush;
+	QList<Vertex_t *> vtxs;
+	TestGraph::VertexIterator vi;
+	for(vi = g.vertexBegin(); vi != g.vertexEnd(); ++vi)
+		vtxs.push_back(*vi);
+	std::cout << "took " << t.elapsed() << " ms" << std::endl;
+	assert(vtxs.size() == nvtxs);
+
+	t.currentTime();
+	qsrand((uint) t.msec());
+
+	std::cout << "Main loop start" << std::endl;
+
+	t.start();
+	for(int i = 0, prog = 0; i < niters; ++i)
+	{
+		Vertex_t *v1 = g.insertVertex();
+		Vertex_t *v2 = g.insertVertex();
+		int from, to;
+
+		do
+		{
+			from = qrand() % nvtxs;
+			to = qrand() % nvtxs;
+		} while(!g.insertEdge(vtxs[from], vtxs[to]));
+
+		g.deleteEdge(v1, v2);
+		g.deleteEdge(vtxs[from], vtxs[to]);
+		g.deleteVertex(v1);
+		g.deleteVertex(v2);
+
+		if(100*i/niters != prog)
+		{
+			prog = 100*i/niters;
+			std::cout << prog << "%" << std::endl;
+		}
+	}
+	std::cout << "took " << t.elapsed() << " ms" << std::endl;
 }
