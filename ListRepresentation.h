@@ -152,7 +152,8 @@ public:
 		list[pos1].append(new Edge_t(_pvertex1, _pvertex2));
 
 		if (this->directed == false)
-			list[_pvertex2->getIndex()].append(new Edge_t(_pvertex2, _pvertex1));
+			if (_pvertex1 != _pvertex2)
+				list[_pvertex2->getIndex()].append(new Edge_t(_pvertex2, _pvertex1));
 		return list[pos1].last();
 	}
 

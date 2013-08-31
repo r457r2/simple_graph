@@ -57,7 +57,7 @@ private:
 						pathSize[vrtxCount + to->getIndex()] = from->getIndex();
 					}
 				}
-				eiter++;
+				++eiter;
 			}
 
 			eiter = pgraph->edgeBegin();
@@ -68,24 +68,15 @@ private:
 
 				if (pathSize[to->getIndex()] > (pathSize[from->getIndex()] + (*eiter)->getWeight()))
 					return false;
-				eiter++;
+				++eiter;
 			}
-
-			return true;
 		}
-//		for i ←1 to | V[G] | - 1
-//		5.      do for для каждого ребра (u, v)E[G]
-//		6.               do Relax (u, v, w)
-//		7.  for для каждого ребра (u, v)E[G]
-//		8.           do if d[v]>d[u] + w(u, v)
-//		9.                    then return FALSE
-//		10. return TRUE.
+		return true;
 	}
 
 public:
-	TaskTwo(Graph<Vertex_t,Edge_t>* _pgraph, Vertex_t* pvrtx) : pgraph(_pgraph)
+	TaskTwo(Graph<Vertex_t,Edge_t>* _pgraph, Vertex_t* pvrtx) : pgraph(_pgraph), pvertex(pvrtx)
 	{
-		pvertex = pvrtx;
 		vrtxCount = pgraph->vertexCount();
 		pathSize = new int[vrtxCount * 2];
 
@@ -137,9 +128,14 @@ public:
 	void result()
 	{
 		for (int i = 0; i < vrtxCount; i++)
-		{
 			qDebug() << pathSize[i] << " : " << pathSize[vrtxCount + i];
-		}
+	}
+
+	void result(int maxLenth)
+	{
+		for (int i = 0; i < vrtxCount; i++)
+			if (pathSize[vrtxCount + i] < maxLenth)
+				qDebug() << pathSize[i] << " : " << pathSize[vrtxCount + i];
 	}
 };
 

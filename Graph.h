@@ -26,7 +26,7 @@ public:
 		graph = new ListRepr_t();
 	}
 
-	Graph (int numberOfVertex, bool _directed, ReprType t = LIST_REPR) : type(t) // without edge
+	Graph (int numberOfVertex, bool _directed = false, ReprType t = LIST_REPR) : type(t) // without edge
 	{
 		if (type == MATRIX_REPR)
 			graph = new MatrixRepr_t(numberOfVertex, _directed);
@@ -34,7 +34,7 @@ public:
 			graph = new ListRepr_t(numberOfVertex, _directed);
 	}
 
-	Graph (int numberOfVertex, int numberOfEdge, bool _directed, ReprType t = LIST_REPR) : type(t)//full
+	Graph (int numberOfVertex, int numberOfEdge, bool _directed = false, ReprType t = LIST_REPR) : type(t)//full
 	{
 		if (type == MATRIX_REPR)
 			graph = new MatrixRepr_t(numberOfVertex, numberOfEdge, _directed);

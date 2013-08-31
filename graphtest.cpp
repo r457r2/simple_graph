@@ -7,7 +7,7 @@
 #include "VertexDescriptor.h"
 #include "EdgeDescriptor.h"
 
-const ReprType GRAPH_REPR = MATRIX_REPR;
+const ReprType GRAPH_REPR = LIST_REPR;
 
 typedef VertexDescriptor<int, int> Vertex_t;
 typedef EdgeDescriptor<Vertex_t, int, int> Edge_t;
@@ -180,6 +180,16 @@ void GraphTest::iterTest()
 	for(ii = in_out.incomingEdgeBegin(v9); ii != in_out.incomingEdgeEnd(v9); ++ii, ++i)
 		(*ii)->setData(4987935);
 	assert(i == 7);
+
+	//test loop
+	TestGraph g_small(3, 6, false, GRAPH_REPR);
+
+	i = 0;
+	TestGraph::VertexIterator vii = g_small.vertexBegin();
+	TestGraph::OutgoingEdgeIterator oii;
+	for(oii = g_small.outgoingEdgeBegin(*vii); oii != g_small.outgoingEdgeEnd(*vii); ++oii, ++i)
+		(*oii)->setWeight(3948212);
+	assert(i == 3);
 }
 
 void GraphTest::loadTest()
