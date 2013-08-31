@@ -21,7 +21,7 @@ private:
 
 public:
 
-	Graph () : type(LIST_REPR) // empty L-graph
+	Graph () : type(LIST_REPR)
 	{
 		graph = new ListRepr_t();
 	}
@@ -371,14 +371,13 @@ public:
 		iter.iter = this->edgeEnd();
 		return iter;
 	}
-
 	
 	int vertexCount (){return graph->vertexCount();}
 	int edgeCount (){return graph->edgeCount();}
 	bool isDirected (){return graph->isDirected();}
 	ReprType getType(){return type;}
 
-	float getSaturationCoeffiicent (){return graph->getSaturationCoefficient();}
+	float getDensity (){return graph->getDensity();}
 
 	bool toListGraph ()
 	{
