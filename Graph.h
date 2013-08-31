@@ -21,12 +21,12 @@ private:
 
 public:
 
-	Graph () : type(LIST_REPR) // empty L-graph
+	Graph () : type(LIST_REPR)
 	{
 		graph = new ListRepr_t();
 	}
 
-	Graph (int numberOfVertex, bool _directed, ReprType t = LIST_REPR) : type(t) // without edge
+	Graph (int numberOfVertex, bool _directed, ReprType t = LIST_REPR) : type(t)
 	{
 		if (type == MATRIX_REPR)
 			graph = new MatrixRepr_t(numberOfVertex, _directed);
@@ -34,7 +34,7 @@ public:
 			graph = new ListRepr_t(numberOfVertex, _directed);
 	}
 
-	Graph (int numberOfVertex, int numberOfEdge, bool _directed, ReprType t = LIST_REPR) : type(t)//full
+	Graph (int numberOfVertex, int numberOfEdge, bool _directed, ReprType t = LIST_REPR) : type(t)
 	{
 		if (type == MATRIX_REPR)
 			graph = new MatrixRepr_t(numberOfVertex, numberOfEdge, _directed);
@@ -371,14 +371,13 @@ public:
 		iter.iter = this->edgeEnd();
 		return iter;
 	}
-
 	
 	int vertexCount (){return graph->vertexCount();}
 	int edgeCount (){return graph->edgeCount();}
 	bool isDirected (){return graph->isDirected();}
 	ReprType getType(){return type;}
 
-	float getSaturationCoeffiicent (){return graph->getSaturationCoefficient();}
+	float getDensity (){return graph->getDensity();}
 
 	bool toListGraph ()
 	{

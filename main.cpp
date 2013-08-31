@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
 	GraphTest::correctnessTest();
 	GraphTest::iterTest();
-	GraphTest::loadTest(10000, 90000, 10000);
+	//GraphTest::loadTest(10000, 90000, 10000);
 	return 0;
 	return app.exec();
 }

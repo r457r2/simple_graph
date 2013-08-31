@@ -14,7 +14,8 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    graphtest.cpp
+    graphtest.cpp \
+    spanningtreebuilder.cpp
 
 
 HEADERS  += \
@@ -26,4 +27,5 @@ HEADERS  += \
     MatrixRepresentation.h \
     graphtest.h \
     TaskOne.h \
-    TaskTwo.h
+    TaskTwo.h \
+    spanningtreebuilder.h
