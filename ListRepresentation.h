@@ -41,24 +41,24 @@ public:
 		}
 	}
 
-	ListRepresentation (ListRepresentation &one)
+	ListRepresentation (ListRepresentation &other)
 	{
-		this->directed = one.directed;
+		this->directed = other.directed;
 
-		for (int i = 0; i < one.vertexCount(); i++)
+		for (int i = 0; i < other.vertexCount(); i++)
 		{
-			this->vertexes.append(new Vertex_t(*(one.vertexes[i])));
+			this->vertexes.append(new Vertex_t(*(other.vertexes[i])));
 		}
 
-		for (int i = 0; i < one.vertexCount(); i++)
+		for (int i = 0; i < other.vertexCount(); i++)
 		{
-			for (int j = 0; j < one.list[i].size(); j++)
+			for (int j = 0; j < other.list[i].size(); j++)
 			{
 				this->list[i].append(new Edge_t(
-										this->vertexes[one.list[i][j]->From()->getIndex()],
-										this->vertexes[one.list[i][j]->To()->getIndex()],
-										one.list[i][j]->getWeight(),
-										one.list[i][j]->getData()));
+										this->vertexes[other.list[i][j]->From()->getIndex()],
+										this->vertexes[other.list[i][j]->To()->getIndex()],
+										other.list[i][j]->getWeight(),
+										other.list[i][j]->getData()));
 			}
 		}
 	}
@@ -187,6 +187,24 @@ public:
 			}
 		}
 		return false;
+	}
+
+	Edge_t* getEdge (Vertex_t* _pvertex1, Vertex_t* _pvertex2)
+	{
+		if (!(this->belongs(_pvertex1) && this->belongs(_pvertex2)))
+			return NULL;
+
+		Edge_t* tmp = NULL;
+		for (int i = 0; i < this->list[_pvertex1->getIndex()].size(); i++)
+		{
+			if ((this->list[_pvertex1->getIndex()][i])->getEnd() == _pvertex2)
+			{
+				tmp = this->list[_pvertex1->getIndex()][i];
+				break;
+			}
+		}
+
+		return tmp;
 	}
 };
 

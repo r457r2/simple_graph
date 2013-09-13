@@ -1,5 +1,6 @@
 #ifndef GRAPH_H
 #define GRAPH_H
+#include <stdexcept>
 #include "Representation.h"
 #include "ListRepresentation.h"
 #include "MatrixRepresentation.h"
@@ -322,6 +323,9 @@ public:
 
 	OutgoingEdgeIterator outgoingEdgeBegin (Vertex_t* pvertex)
 	{
+		if (!graph->belongs(pvertex))
+			throw std::runtime_error("outgoingEdgeBegin");
+
 		OutgoingEdgeIterator iter;
 		if (type == LIST_REPR)
 		{
@@ -338,6 +342,9 @@ public:
 
 	OutgoingEdgeIterator outgoingEdgeEnd (Vertex_t* pvertex)
 	{
+		if (!graph->belongs(pvertex))
+			throw std::runtime_error("outgoingEdgeEnd");
+
 		OutgoingEdgeIterator iter;
 		if (type == LIST_REPR)
 		{
@@ -352,22 +359,28 @@ public:
 		return iter;
 	}
 
-	IncomingEdgeIterator incomingEdgeBegin(Vertex_t *pv)
+	IncomingEdgeIterator incomingEdgeBegin(Vertex_t *pvertex)
 	{
+		if (!graph->belongs(pvertex))
+			throw std::runtime_error("incomingEdgeBegin");
+
 		IncomingEdgeIterator iter;
 		iter.g = this;
-		iter.ptarget = pv;
+		iter.ptarget = pvertex;
 		iter.iter = this->edgeBegin();
-		if(!(*iter.iter)->isComingTo(pv))
+		if(!(*iter.iter)->isComingTo(pvertex))
 			++iter;
 		return iter;
 	}
 
-	IncomingEdgeIterator incomingEdgeEnd(Vertex_t *pv)
+	IncomingEdgeIterator incomingEdgeEnd(Vertex_t *pvertex)
 	{
+		if (!graph->belongs(pvertex))
+			throw std::runtime_error("incomingEdgeEnd");
+
 		IncomingEdgeIterator iter;
 		iter.g = this;
-		iter.ptarget = pv;
+		iter.ptarget = pvertex;
 		iter.iter = this->edgeEnd();
 		return iter;
 	}
@@ -441,9 +454,10 @@ public:
 	}
 
 	Vertex_t* insertVertex (){return graph->insertVertex();}
-	bool deleteVertex (Vertex_t *_vertex1){return graph->deleteVertex(_vertex1);}
-	Edge_t* insertEdge (Vertex_t *_vertex1, Vertex_t *_vertex2){return graph->insertEdge(_vertex1, _vertex2);}
-	bool deleteEdge (Vertex_t *_vertex1, Vertex_t *_vertex2){return graph->deleteEdge(_vertex1, _vertex2);}
+	bool deleteVertex (Vertex_t *_pvertex1){return graph->deleteVertex(_pvertex1);}
+	Edge_t* insertEdge (Vertex_t *_pvertex1, Vertex_t *_pvertex2){return graph->insertEdge(_pvertex1, _pvertex2);}
+	bool deleteEdge (Vertex_t *_pvertex1, Vertex_t *_pvertex2){return graph->deleteEdge(_pvertex1, _pvertex2);}
+	Edge_t* getEdge (Vertex_t *_pvertex1, Vertex_t *_pvertex2){return graph->getEdge(_pvertex1, _pvertex2);}
 };
 
 #endif // GRAPH_H

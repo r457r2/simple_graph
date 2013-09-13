@@ -53,13 +53,14 @@ public:
 
 	float getDensity ()
 	{
-		return (float) edgeCount() / maxEdgesCount();
+		return (float) (2 * edgeCount()) / vertexCount();
 	}
 
 	virtual Vertex_t* insertVertex () = 0;
 	virtual bool deleteVertex (Vertex_t* _pvertex1) = 0;
 	virtual Edge_t* insertEdge (Vertex_t* _pvertex1, Vertex_t* _pvertex2) = 0;
 	virtual bool deleteEdge (Vertex_t* _pvertex1, Vertex_t* _pvertex2) = 0;
+	virtual Edge_t* getEdge (Vertex_t* _pvertex1, Vertex_t* _pvertex2) = 0;
 };
 
 #endif // REPRESENTATION_H

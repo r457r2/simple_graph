@@ -1,6 +1,8 @@
 #ifndef TASK_ONE_H
 #define TASK_ONE_H
 #include <Graph.h>
+#include <QVector>
+#include <QDebug>
 
 //Интерфейс АТД «Задача 1» включает операции:
 //Конструктор (g) - создает объект задачи 1, ассоциированный с графом  g, и выполняет решение задачи для графа g,
@@ -21,68 +23,65 @@ private:
 	int cnt;
 	QVector<int> ord;	
 	QVector<Edge_t*> edgesArray;
+	int laborVertex;
+	int laborEdge;
+
 
 	void solveC(Edge_t other)
 	{
+		laborVertex++;
 		int fromInd = other.getBegin()->getIndex();
 		int currInd = other.getEnd()->getIndex();
+		Vertex_t* currvrtx = other.getEnd();
 		ord[currInd] = cnt++;
 
-		qDebug() << currInd << "current Vertex";
+//qDebug() << currInd << "current Vertex";
 
-		typename Graph<Vertex_t,Edge_t>::OutgoingEdgeIterator eiter = pgraph->outgoingEdgeBegin(other.getEnd());
+		typename Graph<Vertex_t,Edge_t>::OutgoingEdgeIterator eiter = pgraph->outgoingEdgeBegin(currvrtx);
 
-		Edge_t* tmp;
-
-		for (; eiter != pgraph->outgoingEdgeEnd(other.getEnd()); ++eiter)
+		for (; eiter != pgraph->outgoingEdgeEnd(currvrtx); ++eiter)
 		{
-			qDebug() << (*eiter)->getBegin()->getIndex() << "..." << (*eiter)->getEnd()->getIndex();
+			int iterInd = (*eiter)->getEnd()->getIndex();
+//qDebug() << (*eiter)->getBegin()->getIndex() << "..." << iterInd;
 
-			if (((*eiter)->getEnd()->getIndex()) == fromInd)
-				tmp = *eiter;
-
-			if (ord[(*eiter)->getEnd()->getIndex()] == -1)
+			if (ord[iterInd] == -1)
 			{
+				laborEdge++;
 				this->edgesArray.append(*eiter);
-				qDebug() << "from" << currInd << "to" << (*eiter)->getEnd()->getIndex();
-				solveC(Edge_t(other.getEnd(), (*eiter)->getEnd()));
+//qDebug() << "from" << currInd << "to" << iterInd;
+				solveC(Edge_t(currvrtx, (*eiter)->getEnd()));
 			}
-			else if ((*eiter)->getEnd()->getIndex() == currInd)
+			else if (iterInd == currInd)
 				{
+					laborEdge++;
 					this->edgesArray.append(*eiter);
-					qDebug() << "from__" << currInd << "to" << (*eiter)->getEnd()->getIndex();
+//qDebug() << "from__" << currInd << "to" << iterInd;
 
 					this->edgesArray.append(*eiter);
-					qDebug() << "from__" << (*eiter)->getEnd()->getIndex() << "to" << currInd;
+//qDebug() << "from__" << iterInd << "to" << currInd;
 				}
-				else if (ord[(*eiter)->getEnd()->getIndex()] < ord[fromInd])
+				else if (ord[iterInd] < ord[fromInd])
 					{
+						laborEdge++;
 						this->edgesArray.append(*eiter);
-						qDebug() << "from" << currInd << "to" << (*eiter)->getEnd()->getIndex();
+//qDebug() << "from" << currInd << "to" << iterInd;
 
-						typename Graph<Vertex_t,Edge_t>::VertexIterator viter = pgraph->vertexBegin();
-						for (int index = 0; index < (*eiter)->getEnd()->getIndex(); index++)
-							++viter;
-						typename Graph<Vertex_t,Edge_t>::OutgoingEdgeIterator eit = pgraph->outgoingEdgeBegin(*viter);
+						this->edgesArray.append(pgraph->getEdge((*eiter)->getEnd(), currvrtx));
 
-						while ((*eit)->getEnd()->getIndex() != currInd)
-							++eit;
-						this->edgesArray.append(*eit);
-						qDebug() << "from" << (*eiter)->getEnd()->getIndex() << "to" << currInd;
+//qDebug() << "from" << iterInd << "to" << currInd;
 					}
 		}
 
 		if (fromInd != currInd)
 		{
-			this->edgesArray.append(tmp);
-			qDebug() << currInd << "current Vertex";
-			qDebug() << "from" << currInd << "to" << fromInd;
+			this->edgesArray.append(pgraph->getEdge(currvrtx, other.getBegin()));
+//qDebug() << "from" << currInd << "to" << fromInd;
 		}
 		else
 		{
-			qDebug() << ".";
+			//qDebug() << ".";
 		}
-		qDebug() << "up from" << currInd;
+		//qDebug() << "up from" << currInd;
 	}
 //	{
 //		int fromInd = other.getBegin()->getIndex();
@@ -105,6 +104,8 @@ private:
 
 	void solve()
 	{
+		laborVertex = 0;
+		laborEdge = 0;
 		this->edgesArray.clear();
 		typename Graph<Vertex_t,Edge_t>::VertexIterator viter = pgraph->vertexBegin();
 		for (int v = 0; v < pgraph->vertexCount(); v++)
@@ -114,10 +115,12 @@ private:
 			 ++viter;
 		}
 
-		QVector<int>::iterator one = ord.begin();
-		for (;one != ord.end(); one++)
-			qDebug() << *one;
+//		QVector<int>::iterator one = ord.begin();
+//		for (;one != ord.end(); one++)
+//			qDebug() << *one;
 	}
+
+	int operator[] (int v) { return ord[v]; }
 
 public:
 	TaskOne(Graph<Vertex_t,Edge_t>* _pgraph) : pgraph(_pgraph),
@@ -126,6 +129,8 @@ public:
 	TaskOne(TaskOne& other)
 	{
 		this->pgraph = other.pgraph;
+		this->laborEdge = other.laborEdge;
+		this->laborVertex = other.laborVertex;
 		this->ord = other.ord;
 		this->cnt = other.cnt;
 		this->edgesArray = other.edgesArray;
@@ -144,17 +149,21 @@ public:
 		return (this->solve());
 	}
 
-	void result()
+	QVector<Edge_t*> result()
 	{
-		typename QVector<Edge_t*>::iterator i = edgesArray.begin();
-		for (; i != edgesArray.end(); i++)
-		{
-			qDebug() << *i;
-			qDebug() << (*i)->getBegin()->getIndex() << "..." << (*i)->getEnd()->getIndex();
-		}
-	}
+//		typename QVector<Edge_t*>::iterator i = edgesArray.begin();
+//		for (; i != edgesArray.end(); i++)
+//		{
+//			qDebug() << *i;
+//			qDebug() << (*i)->getBegin()->getIndex() << "..." << (*i)->getEnd()->getIndex();
+//		}
 
-	int operator[] (int v) { return ord[v]; }
+		qDebug() << "edges labortness" << laborEdge;
+		qDebug() << "vertex labortness" << laborVertex;
+		qDebug() << "full labortness" << laborEdge + laborVertex;
+		qDebug() << "edges + vertexes" << pgraph->edgeCount() + pgraph->vertexCount();
+		return edgesArray;
+	}
 };
 
 #endif // TASK_ONE_H

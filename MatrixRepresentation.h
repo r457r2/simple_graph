@@ -198,6 +198,14 @@ public:
 		}
 		return true;
 	}
+
+	Edge_t* getEdge (Vertex_t* _pvertex1, Vertex_t* _pvertex2)
+	{
+		if (!(this->belongs(_pvertex1) && this->belongs(_pvertex2)))
+			return NULL;
+
+		return this->matrix[_pvertex1->getIndex()][_pvertex2->getIndex()];
+	}
 };
 
 #endif // MATRIX_REPRESENTATION_H

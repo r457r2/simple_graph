@@ -35,6 +35,15 @@ public:
 
 	bool isComingTo (Vertex_t* _pvertex){return ((to == _pvertex)? true : false);}
 	bool isComingFrom (Vertex_t* _pvertex){return ((from == _pvertex)? true : false);}
+
+	Vertex_t* other (Vertex_t* pvertex)
+	{
+		if (pvertex == this->getBegin())
+			return getEnd();
+
+		return NULL;
+	}
+
 };
 
 #endif // EDGE_DESCRIPTOR_H
