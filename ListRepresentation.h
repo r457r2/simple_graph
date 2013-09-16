@@ -42,6 +42,7 @@ public:
 	}
 
 	ListRepresentation (ListRepresentation &other)
+		: Representation<Vertex_t, Edge_t>(other)
 	{
 		this->directed = other.directed;
 
@@ -55,8 +56,8 @@ public:
 			for (int j = 0; j < other.list[i].size(); j++)
 			{
 				this->list[i].append(new Edge_t(
-										this->vertexes[other.list[i][j]->From()->getIndex()],
-										this->vertexes[other.list[i][j]->To()->getIndex()],
+										this->vertexes[other.list[i][j]->getBegin()->getIndex()],
+										this->vertexes[other.list[i][j]->getEnd()->getIndex()],
 										other.list[i][j]->getWeight(),
 										other.list[i][j]->getData()));
 			}

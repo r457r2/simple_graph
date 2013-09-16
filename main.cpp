@@ -1,8 +1,11 @@
 #include <QCoreApplication>
 #include <QString>
+#include <iostream>
+
 #include "VertexDescriptor.h"
 #include "EdgeDescriptor.h"
 #include "Graph.h"
+#include "repeater.h"
 
 // tests
 #include "graphtest.h"
@@ -13,24 +16,25 @@
 
 using namespace std;
 
-typedef Graph<VertexDescriptor<string,int>, EdgeDescriptor<VertexDescriptor<string,int>,int,int> > MyGraph;
-
-
 const ReprType GRAPH_REPR = LIST_REPR;
 typedef VertexDescriptor<string, int> Vertex_t;
 typedef EdgeDescriptor<VertexDescriptor<string,int>,int,int> Edge_t;
 typedef Graph<VertexDescriptor<string,int>, EdgeDescriptor<VertexDescriptor<string,int>,int,int> > TestGraph;
 
+typedef Graph<VertexDescriptor<string,int>, EdgeDescriptor<VertexDescriptor<string,int>,int,int> > MyGraph;
+
 //to do
 //get vertex by it's index
 int main(int argc, char *argv[])
 {
-	QCoreApplication app(argc, argv);
+	QCoreApplication a(argc, argv);
+	MyGraph one(3,10,true);
 
-//	MyGraph one(1000,100000,true);
-
-//	TaskOne<VertexDescriptor<string,int>, EdgeDescriptor<VertexDescriptor<string,int>,int,int> > three(&one);
-
+	repeater<Vertex_t, Edge_t> rep(one);
+	rep.repeat();
+	TaskOne<VertexDescriptor<string,int>, EdgeDescriptor<VertexDescriptor<string,int>,int,int> > three;
+return 0;
+//	three.set(&one);
 //	three.result();
 
 //	VertexDescriptor<string,int>* other = *(one.vertexBegin());
@@ -46,6 +50,5 @@ int main(int argc, char *argv[])
 //	for(oii = g_small.outgoingEdgeBegin(*vii); oii != g_small.outgoingEdgeEnd(*vii); ++oii)
 //		qDebug() << (*oii);
 
-//	return 0;
-	return app.exec();
+	return a.exec();
 }

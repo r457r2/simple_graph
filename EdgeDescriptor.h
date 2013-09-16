@@ -29,9 +29,11 @@ public:
 
 	Weight_t getWeight (){return weight;}
 	void setWeight (Weight_t _weight){weight = _weight;}
+	Weight_t& getSWeight (){return weight;}
 
 	Data_t getData (){return data;}
 	void setData (Data_t _data){data = _data;}
+	Data_t& getSData (){return data;}
 
 	bool isComingTo (Vertex_t* _pvertex){return ((to == _pvertex)? true : false);}
 	bool isComingFrom (Vertex_t* _pvertex){return ((from == _pvertex)? true : false);}

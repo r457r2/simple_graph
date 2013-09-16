@@ -47,7 +47,8 @@ public:
 		}
 	}
 
-	MatrixRepresentation (MatrixRepresentation &one)
+	MatrixRepresentation (MatrixRepresentation<Vertex_t, Edge_t> &one)
+		: Representation<Vertex_t, Edge_t>(one)
 	{
 		// Copy all vertexes
 		// Copy matrix: if null, copy null

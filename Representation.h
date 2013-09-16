@@ -37,6 +37,7 @@ protected:
 
 public:
 	Representation (bool _directed) : directed(_directed) {}
+	Representation (Representation &other) {}
 	virtual ~Representation () {}
 
 	int vertexCount ()
@@ -53,7 +54,7 @@ public:
 
 	float getDensity ()
 	{
-		return (float) (2 * edgeCount()) / vertexCount();
+		return ((float) (2 * edgeCount())) / vertexCount();
 	}
 
 	virtual Vertex_t* insertVertex () = 0;

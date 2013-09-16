@@ -26,9 +26,11 @@ public:
 
 	Name_t getName (){return name;}
 	void setName (Name_t _name){name = _name;}
+	Name_t& getSName (){return name;}
 
 	Data_t getData () {return data;}
 	void setData (Data_t _data){data = _data;}
+	Data_t& getSData () {return data;}
 
 	int getIndex (){return index;}
 	void setIndex (int _index){index = _index;}
@@ -38,6 +40,7 @@ public:
 		name = other.getName();
 		data = other.getData();
 		index = other.getIndex();
+		return *this;
 	}
 };
 

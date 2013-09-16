@@ -5,6 +5,8 @@
 #include "ListRepresentation.h"
 #include "MatrixRepresentation.h"
 
+#include "QDebug"
+
 enum ReprType
 {
 	LIST_REPR = 0,
@@ -16,7 +18,7 @@ class Graph
 {
 private:
 	ReprType type;
-	Representation<Vertex_t, Edge_t>* graph;
+	Representation<Vertex_t, Edge_t>* pgraph;
 	typedef ListRepresentation<Vertex_t, Edge_t> ListRepr_t;
 	typedef MatrixRepresentation<Vertex_t, Edge_t> MatrixRepr_t;
 
@@ -24,34 +26,37 @@ public:
 
 	Graph () : type(LIST_REPR)
 	{
-		graph = new ListRepr_t();
+		pgraph = new ListRepr_t();
 	}
 
 	Graph (int numberOfVertex, bool _directed = false, ReprType t = LIST_REPR) : type(t) // without edge
 	{
 		if (type == MATRIX_REPR)
-			graph = new MatrixRepr_t(numberOfVertex, _directed);
+			pgraph = new MatrixRepr_t(numberOfVertex, _directed);
 		else
-			graph = new ListRepr_t(numberOfVertex, _directed);
+			pgraph = new ListRepr_t(numberOfVertex, _directed);
 	}
 
 	Graph (int numberOfVertex, int numberOfEdge, bool _directed = false, ReprType t = LIST_REPR) : type(t)//full
 	{
 		if (type == MATRIX_REPR)
-			graph = new MatrixRepr_t(numberOfVertex, numberOfEdge, _directed);
+			pgraph = new MatrixRepr_t(numberOfVertex, numberOfEdge, _directed);
 		else
-			graph = new ListRepr_t(numberOfVertex, numberOfEdge, _directed);
+			pgraph = new ListRepr_t(numberOfVertex, numberOfEdge, _directed);
 	}
 
 	Graph (Graph &one)
 	{
-		if (one.type == MATRIX_REPR) graph = new MatrixRepr_t(one);
-		else graph = new ListRepr_t(one);
+		this->type = one.type;
+		if (one.type == MATRIX_REPR)
+			pgraph = new MatrixRepr_t(*static_cast<MatrixRepr_t *>(one.pgraph));
+		else
+			pgraph = new ListRepr_t(*static_cast<ListRepr_t *>(one.pgraph));
 	}
 
 	~Graph ()
 	{
-		delete graph;
+		delete pgraph;
 	}
 
 	class VertexIterator
@@ -267,14 +272,14 @@ public:
 	VertexIterator vertexBegin ()
 	{
 		VertexIterator iter;
-		iter.iter = graph->vertexes.begin();
+		iter.iter = pgraph->vertexes.begin();
 		return iter;
 	}
 
 	VertexIterator vertexEnd ()
 	{
 		VertexIterator iter;
-		iter.iter = graph->vertexes.end();
+		iter.iter = pgraph->vertexes.end();
 		return iter;
 	}
 
@@ -282,26 +287,26 @@ public:
 	{
 		EdgeIterator iter;
 		iter.type = type;
-		iter.graph = this->graph;
-		iter.vertex = this->graph->vertexes.begin();
+		iter.graph = this->pgraph;
+		iter.vertex = this->pgraph->vertexes.begin();
 
 		if (type == LIST_REPR)
 		{
-			iter.edge = ((ListRepr_t*)graph)->list[(*iter.vertex)->getIndex()].begin();
-			while (iter.edge == ((ListRepr_t*)graph)->list[(*iter.vertex)->getIndex()].end())
+			iter.edge = ((ListRepr_t*)pgraph)->list[(*iter.vertex)->getIndex()].begin();
+			while (iter.edge == ((ListRepr_t*)pgraph)->list[(*iter.vertex)->getIndex()].end())
 			{
 				iter.vertex++;
-				if (iter.vertex == graph->vertexes.end())
+				if (iter.vertex == pgraph->vertexes.end())
 				{
-					iter.edge = ((ListRepr_t*)graph)->list[graph->vertexCount() - 1].end();
+					iter.edge = ((ListRepr_t*)pgraph)->list[pgraph->vertexCount() - 1].end();
 					break;
 				}
-				iter.edge = ((ListRepr_t*)graph)->list[(*iter.vertex)->getIndex()].begin();
+				iter.edge = ((ListRepr_t*)pgraph)->list[(*iter.vertex)->getIndex()].begin();
 			}
 		}
 		else
 		{
-			iter.edge = ((MatrixRepr_t*)graph)->matrix[(*iter.vertex)->getIndex()].begin();
+			iter.edge = ((MatrixRepr_t*)pgraph)->matrix[(*iter.vertex)->getIndex()].begin();
 			if(*iter == NULL)
 				++iter;
 		}
@@ -312,56 +317,56 @@ public:
 	{
 		EdgeIterator iter;
 		iter.type = type;
-		iter.graph = this->graph;
-		iter.vertex = this->graph->vertexes.end();
+		iter.graph = this->pgraph;
+		iter.vertex = this->pgraph->vertexes.end();
 		if (type == LIST_REPR)
-			iter.edge = ((ListRepr_t*)graph)->list[iter.graph->vertexCount() - 1].end();
+			iter.edge = ((ListRepr_t*)pgraph)->list[iter.graph->vertexCount() - 1].end();
 		else
-			iter.edge = ((MatrixRepr_t*)graph)->matrix[iter.graph->vertexCount() - 1].end();
+			iter.edge = ((MatrixRepr_t*)pgraph)->matrix[iter.graph->vertexCount() - 1].end();
 		return iter;
 	}
 
 	OutgoingEdgeIterator outgoingEdgeBegin (Vertex_t* pvertex)
 	{
-		if (!graph->belongs(pvertex))
+		if (!pgraph->belongs(pvertex))
 			throw std::runtime_error("outgoingEdgeBegin");
 
 		OutgoingEdgeIterator iter;
 		if (type == LIST_REPR)
 		{
-			iter.row = &(((ListRepr_t*)graph)->list[pvertex->getIndex()]);
-			iter.edge = ((ListRepr_t*)graph)->list[pvertex->getIndex()].begin();
+			iter.row = &(((ListRepr_t*)pgraph)->list[pvertex->getIndex()]);
+			iter.edge = ((ListRepr_t*)pgraph)->list[pvertex->getIndex()].begin();
 		}
 		else
 		{
-			iter.row = &(((MatrixRepr_t*)graph)->matrix[pvertex->getIndex()]);
-			iter.edge = ((MatrixRepr_t*)graph)->matrix[pvertex->getIndex()].begin();
+			iter.row = &(((MatrixRepr_t*)pgraph)->matrix[pvertex->getIndex()]);
+			iter.edge = ((MatrixRepr_t*)pgraph)->matrix[pvertex->getIndex()].begin();
 		}
 		return iter;
 	}
 
 	OutgoingEdgeIterator outgoingEdgeEnd (Vertex_t* pvertex)
 	{
-		if (!graph->belongs(pvertex))
+		if (!pgraph->belongs(pvertex))
 			throw std::runtime_error("outgoingEdgeEnd");
 
 		OutgoingEdgeIterator iter;
 		if (type == LIST_REPR)
 		{
-			iter.row = &(((ListRepr_t*)graph)->list[pvertex->getIndex()]);
-			iter.edge = ((ListRepr_t*)graph)->list[pvertex->getIndex()].end();
+			iter.row = &(((ListRepr_t*)pgraph)->list[pvertex->getIndex()]);
+			iter.edge = ((ListRepr_t*)pgraph)->list[pvertex->getIndex()].end();
 		}
 		else
 		{
-			iter.row = &(((MatrixRepr_t*)graph)->matrix[pvertex->getIndex()]);
-			iter.edge = ((MatrixRepr_t*)graph)->matrix[pvertex->getIndex()].end();
+			iter.row = &(((MatrixRepr_t*)pgraph)->matrix[pvertex->getIndex()]);
+			iter.edge = ((MatrixRepr_t*)pgraph)->matrix[pvertex->getIndex()].end();
 		}
 		return iter;
 	}
 
 	IncomingEdgeIterator incomingEdgeBegin(Vertex_t *pvertex)
 	{
-		if (!graph->belongs(pvertex))
+		if (!pgraph->belongs(pvertex))
 			throw std::runtime_error("incomingEdgeBegin");
 
 		IncomingEdgeIterator iter;
@@ -375,7 +380,7 @@ public:
 
 	IncomingEdgeIterator incomingEdgeEnd(Vertex_t *pvertex)
 	{
-		if (!graph->belongs(pvertex))
+		if (!pgraph->belongs(pvertex))
 			throw std::runtime_error("incomingEdgeEnd");
 
 		IncomingEdgeIterator iter;
@@ -385,41 +390,41 @@ public:
 		return iter;
 	}
 	
-	int vertexCount (){return graph->vertexCount();}
-	int edgeCount (){return graph->edgeCount();}
-	bool isDirected (){return graph->isDirected();}
+	int vertexCount (){return pgraph->vertexCount();}
+	int edgeCount (){return pgraph->edgeCount();}
+	bool isDirected (){return pgraph->isDirected();}
 	ReprType getType(){return type;}
 
-	float getDensity (){return graph->getDensity();}
+	float getDensity (){return pgraph->getDensity();}
 
 	bool toListGraph ()
 	{
 		if (type == LIST_REPR)
 			return false;
 
-		Representation<Vertex_t, Edge_t>* newGraph = new ListRepr_t(graph->isDirected());
+		Representation<Vertex_t, Edge_t>* newGraph = new ListRepr_t(pgraph->isDirected());
 
-		for (int i = 0; i < graph->vertexCount(); i++)
+		for (int i = 0; i < pgraph->vertexCount(); i++)
 		{
 			Vertex_t* newVertex = newGraph->insertVertex();
-			*newVertex = *(graph->vertexes[i]);
+			*newVertex = *(pgraph->vertexes[i]);
 		}
-		for (int i = 0; i < graph->vertexCount(); i++)
+		for (int i = 0; i < pgraph->vertexCount(); i++)
 		{
-			for (int j = 0; j < graph->vertexCount(); j++)
+			for (int j = 0; j < pgraph->vertexCount(); j++)
 			{
-				if ((static_cast<MatrixRepr_t*>(graph))->matrix[i][j] != NULL)
+				if ((static_cast<MatrixRepr_t*>(pgraph))->matrix[i][j] != NULL)
 				{
 					Edge_t* newEdge = newGraph->insertEdge(newGraph->vertexes[i], newGraph->vertexes[j]);
-					newEdge->setWeight() = (static_cast<MatrixRepr_t*>(graph))->matrix[i][j]->getWeight();
-					newEdge->setData() = (static_cast<MatrixRepr_t*>(graph))->matrix[i][j]->getData();
+					newEdge->setWeight((static_cast<MatrixRepr_t*>(pgraph))->matrix[i][j]->getWeight());
+					newEdge->setData((static_cast<MatrixRepr_t*>(pgraph))->matrix[i][j]->getData());
 				}
 			}
 		}
 
-		delete graph;
-		type = MATRIX_REPR;
-		graph = newGraph;
+		delete pgraph;
+		type = LIST_REPR;
+		pgraph = newGraph;
 
 		return true;
 	}
@@ -429,35 +434,36 @@ public:
 		if (type == MATRIX_REPR)
 			return false;
 
-		Representation<Vertex_t, Edge_t>* newGraph = new MatrixRepr_t(graph->isDirected());
+		Representation<Vertex_t, Edge_t>* newGraph = new MatrixRepr_t(pgraph->isDirected());
 
-		for (int i = 0; i < graph->edgeCount(); i++)
+		for (int i = 0; i < pgraph->vertexCount(); i++)
 		{
 			Vertex_t* newVertex = newGraph->insertVertex();
-			*newVertex = *(graph->vertexes[i]);
+			*newVertex = *(pgraph->vertexes[i]);
 		}
-		for (int i = 0; i < graph->edgeCount(); i++)
+		for (int i = 0; i < pgraph->vertexCount(); i++)
 		{
-			for (int j = 0; j < (static_cast<ListRepr_t*>(graph))->list[i].size(); j++)
+			for (int j = 0; j < (static_cast<ListRepr_t*>(pgraph))->list[i].size(); j++)
 			{
-				Edge_t* newEdge = newGraph->insertEdge(newGraph->vertexes[i], newGraph->vertexes[j]);
-				newEdge->setWeight() = (static_cast<ListRepr_t*>(graph))->list[i][j]->getWeight();
-				newEdge->setData() = (static_cast<ListRepr_t*>(graph))->list[i][j]->getData();
+				int index = (static_cast<ListRepr_t*>(pgraph))->list[i][j]->getEnd()->getIndex();
+				Edge_t* newEdge = newGraph->insertEdge(newGraph->vertexes[i], newGraph->vertexes[index]);
+				newEdge->setWeight((static_cast<ListRepr_t*>(pgraph))->list[i][index]->getWeight());
+				newEdge->setData((static_cast<ListRepr_t*>(pgraph))->list[i][index]->getData());
 			}
 		}
 
-		delete graph;
-		type = LIST_REPR;
-		graph = newGraph;
+		delete pgraph;
+		type = MATRIX_REPR;
+		pgraph = newGraph;
 
 		return true;
 	}
 
-	Vertex_t* insertVertex (){return graph->insertVertex();}
-	bool deleteVertex (Vertex_t *_pvertex1){return graph->deleteVertex(_pvertex1);}
-	Edge_t* insertEdge (Vertex_t *_pvertex1, Vertex_t *_pvertex2){return graph->insertEdge(_pvertex1, _pvertex2);}
-	bool deleteEdge (Vertex_t *_pvertex1, Vertex_t *_pvertex2){return graph->deleteEdge(_pvertex1, _pvertex2);}
-	Edge_t* getEdge (Vertex_t *_pvertex1, Vertex_t *_pvertex2){return graph->getEdge(_pvertex1, _pvertex2);}
+	Vertex_t* insertVertex (){return pgraph->insertVertex();}
+	bool deleteVertex (Vertex_t *_pvertex1){return pgraph->deleteVertex(_pvertex1);}
+	Edge_t* insertEdge (Vertex_t *_pvertex1, Vertex_t *_pvertex2){return pgraph->insertEdge(_pvertex1, _pvertex2);}
+	bool deleteEdge (Vertex_t *_pvertex1, Vertex_t *_pvertex2){return pgraph->deleteEdge(_pvertex1, _pvertex2);}
+	Edge_t* getEdge (Vertex_t *_pvertex1, Vertex_t *_pvertex2){return pgraph->getEdge(_pvertex1, _pvertex2);}
 };
 
 #endif // GRAPH_H

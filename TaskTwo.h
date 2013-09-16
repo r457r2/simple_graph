@@ -3,7 +3,9 @@
 #include <Graph.h>
 #include <QVector>
 #include <QDebug>
+#include <iostream>
 
+using namespace std;
 //Интерфейс АТД «Задача 2» включает операции:
 //Конструктор (g) - создает объект задачи 2, ассоциированный с графом  g, и выполняет решение задачи для графа g,
 //Конструктор (T) - конструктор копирования создает копию объекта – задачи T,
@@ -24,6 +26,7 @@ private:
 	int labor;
 	Vertex_t* pvertex;
 	int vrtxCount;
+	bool correct;
 
 	struct VertexLenth
 	{
@@ -42,14 +45,14 @@ private:
 
 		pathSize.clear();
 
-		for (typename Graph<Vertex_t,Edge_t>::VertexIterator i = pgraph->vertexBegin(); i != pgraph->vertexEnd(); i++)
+		for (typename Graph<Vertex_t,Edge_t>::VertexIterator i = pgraph->vertexBegin(); i != pgraph->vertexEnd(); ++i)
 		{
 			pathSize.append(new VertexLenth);
 			(this->pathSize[(*i)->getIndex()])->vertex = *i;
 			(this->pathSize[(*i)->getIndex()])->parent = -1;
 			(this->pathSize[(*i)->getIndex()])->lenth = INT_MAX;
 		}
-		pathSize[pvrtx->getIndex()]->lenth = 0;
+			pathSize[pvrtx->getIndex()]->lenth = 0;
 	}
 
 	bool solve()
@@ -86,15 +89,21 @@ private:
 			Vertex_t* from = (*eiter)->getBegin();
 			Vertex_t* to = (*eiter)->getEnd();
 			if (pathSize[to->getIndex()]->lenth > (pathSize[from->getIndex()]->lenth + (*eiter)->getWeight()))
+			{
+				correct = false;
 				return false;
+			}
 			++eiter;
 		}
 
+		correct = true;
 		return true;
 	}
 
 public:
-	TaskTwo(Graph<Vertex_t,Edge_t>* _pgraph, Vertex_t* pvrtx) : pgraph(_pgraph), pvertex(pvrtx)
+	TaskTwo () {}
+
+	TaskTwo(Graph<Vertex_t,Edge_t>* _pgraph, Vertex_t* pvrtx) : pgraph(_pgraph), pvertex(pvrtx) , correct(false)
 	{
 		vrtxCount = pgraph->vertexCount();
 		labor = 0;
@@ -107,6 +116,9 @@ public:
 			(this->pathSize[(*i)->getIndex()])->lenth = INT_MAX;
 		}
 		pathSize[pvrtx->getIndex()]->lenth = 0;
+
+		if (pgraph->vertexCount() == 0)
+			correct = false;
 		this->solve();
 	}
 
@@ -125,18 +137,34 @@ public:
 	{
 		this->pgraph = pgrph;
 		this->prepTask(pvrtx);
+		this->vrtxCount = pgrph->vertexCount();
+		if (pgraph->vertexCount() == 0)
+		{
+			correct = false;
+			return false;
+		}
 		return (this->solve());
 	}
 
 	bool restart(Vertex_t* pvrtx)
 	{
 		this->prepTask(pvrtx);
+		if (pgraph->vertexCount() == 0)
+		{
+			correct = false;
+			return false;
+		}
 		return (this->solve());
 	}
 
 	bool restart()
 	{
 		this->prepTask(pvertex);
+		if (pgraph->vertexCount() == 0)
+		{
+			correct = false;
+			return false;
+		}
 		return (this->solve());
 	}
 
@@ -144,15 +172,23 @@ public:
 	{
 		QVector<Vertex_t*> tmp;
 
+		if (!correct)
+		{
+			cout << "Wrong solution!" << endl;
+			return tmp;
+		}
+
 		for (int i = 0; i < vrtxCount; i++)
+		{
 			if (pathSize[i]->lenth < maxLenth)
 			{
 				tmp.append(pathSize[i]->vertex);
-				//qDebug() << pathSize[i]->lenth << " : " << pathSize[i]->parent;
+				cout << pathSize[i]->lenth << " : " << pathSize[i]->parent << endl;
 			}
+		}
 
-		qDebug() << "labortness" << labor;
-		qDebug() << "edges * vertexes" << pgraph->edgeCount() * pgraph->vertexCount();
+		cout << "labortness: " << labor << endl;
+		cout << "edges * vertexes: " << pgraph->edgeCount() * pgraph->vertexCount() << endl << endl;
 		return tmp;
 	}
 };

@@ -7,8 +7,6 @@
 QT       += core
 QT	 -= gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
 TARGET = simple_graph
 
 CONFIG   += console
@@ -16,14 +14,11 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-
 SOURCES += main.cpp \
-    graphtest.cpp \
-    spanningtreebuilder.cpp
+    graphtest.cpp
 
 
-HEADERS  += \
-    VertexDescriptor.h \
+HEADERS  += VertexDescriptor.h \
     EdgeDescriptor.h \
     Graph.h \
     Representation.h \
@@ -32,4 +27,4 @@ HEADERS  += \
     graphtest.h \
     TaskOne.h \
     TaskTwo.h \
-    spanningtreebuilder.h
+    repeater.h
