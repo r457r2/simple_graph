@@ -341,6 +341,9 @@ public:
 		{
 			iter.row = &(((MatrixRepr_t*)pgraph)->matrix[pvertex->getIndex()]);
 			iter.edge = ((MatrixRepr_t*)pgraph)->matrix[pvertex->getIndex()].begin();
+			if(*(iter.edge) == NULL)
+				while(iter.edge != iter.row->end() && *(iter.edge) == NULL)
+					++(iter.edge);
 		}
 		return iter;
 	}
