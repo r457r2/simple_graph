@@ -146,7 +146,7 @@ public:
 
 	QVector<Edge_t*> result()
 	{
-		cout << "edge from...to";
+		cout << "edge from...to" << endl;
 		typename QVector<Edge_t*>::iterator i = edgesArray.begin();
 		for (; i != edgesArray.end(); i++)
 		{
