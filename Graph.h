@@ -341,6 +341,9 @@ public:
 		{
 			iter.row = &(((MatrixRepr_t*)pgraph)->matrix[pvertex->getIndex()]);
 			iter.edge = ((MatrixRepr_t*)pgraph)->matrix[pvertex->getIndex()].begin();
+			if(*(iter.edge) == NULL)
+				while(iter.edge != iter.row->end() && *(iter.edge) == NULL)
+					++(iter.edge);
 		}
 		return iter;
 	}
@@ -400,9 +403,10 @@ public:
 	bool toListGraph ()
 	{
 		if (type == LIST_REPR)
-			return false;
+			return true;
 
 		Representation<Vertex_t, Edge_t>* newGraph = new ListRepr_t(pgraph->isDirected());
+		MatrixRepr_t *old_repr = static_cast<MatrixRepr_t *>(pgraph);
 
 		for (int i = 0; i < pgraph->vertexCount(); i++)
 		{
@@ -413,7 +417,7 @@ public:
 		{
 			for (int j = 0; j < pgraph->vertexCount(); j++)
 			{
-				if ((static_cast<MatrixRepr_t*>(pgraph))->matrix[i][j] != NULL)
+				if (old_repr->matrix[i][j] != NULL)
 				{
 					Edge_t* newEdge = newGraph->insertEdge(newGraph->vertexes[i], newGraph->vertexes[j]);
 					newEdge->setWeight((static_cast<MatrixRepr_t*>(pgraph))->matrix[i][j]->getWeight());
@@ -432,9 +436,10 @@ public:
 	bool toMatrixGraph ()
 	{
 		if (type == MATRIX_REPR)
-			return false;
+			return true;
 
 		Representation<Vertex_t, Edge_t>* newGraph = new MatrixRepr_t(pgraph->isDirected());
+		ListRepr_t *old_repr = static_cast<ListRepr_t *>(pgraph);
 
 		for (int i = 0; i < pgraph->vertexCount(); i++)
 		{
@@ -443,12 +448,12 @@ public:
 		}
 		for (int i = 0; i < pgraph->vertexCount(); i++)
 		{
-			for (int j = 0; j < (static_cast<ListRepr_t*>(pgraph))->list[i].size(); j++)
+			for (int j = 0; j < old_repr->list[i].size(); j++)
 			{
-				int index = (static_cast<ListRepr_t*>(pgraph))->list[i][j]->getEnd()->getIndex();
+				int index = old_repr->list[i][j]->getEnd()->getIndex();
 				Edge_t* newEdge = newGraph->insertEdge(newGraph->vertexes[i], newGraph->vertexes[index]);
-				newEdge->setWeight((static_cast<ListRepr_t*>(pgraph))->list[i][index]->getWeight());
-				newEdge->setData((static_cast<ListRepr_t*>(pgraph))->list[i][index]->getData());
+				newEdge->setWeight(old_repr->list[i][j]->getWeight());
+				newEdge->setData(old_repr->list[i][j]->getData());
 			}
 		}
 
