@@ -53,15 +53,19 @@ private:
 		typename Graph<Vertex_t,Edge_t>::EdgeIterator viter = graph.edgeBegin();
 		while (viter != graph.edgeEnd())
 		{
-			cout << index << ":   " << (*viter) << "   " << (*viter)->getWeight() << "   ";
+
 			if (graph.isDirected() == true)
 			{
-				cout << (*viter)->getBegin()->getIndex() << "--->" << (*viter)->getEnd()->getIndex() << endl;
+				cout << index << ":   " << (*viter) << "   "
+					 << (*viter)->getWeight() << "   "
+					 << (*viter)->getBegin()->getIndex() << "--->" << (*viter)->getEnd()->getIndex() << endl;
 				index++;
 			}
 			else if ((*viter)->getBegin() <= (*viter)->getEnd())
 				 {
-					 cout << (*viter)->getBegin()->getIndex() << "----" << (*viter)->getEnd()->getIndex() << endl;
+					 cout << index << ":   " << (*viter) << "   "
+						  << (*viter)->getWeight() << "   "
+						  << (*viter)->getBegin()->getIndex() << "----" << (*viter)->getEnd()->getIndex() << endl;
 					 index++;
 				 }
 
