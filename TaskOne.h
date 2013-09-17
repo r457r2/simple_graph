@@ -37,59 +37,61 @@ private:
 		Vertex_t* currvrtx = other.getEnd();
 		ord[currInd] = cnt++;
 
-		cout << currInd << "current Vertex" << endl;
+		//cout << currInd << " current Vertex" << endl;
 
 		typename Graph<Vertex_t,Edge_t>::OutgoingEdgeIterator eiter = pgraph->outgoingEdgeBegin(currvrtx);
 
 		for (; eiter != pgraph->outgoingEdgeEnd(currvrtx); ++eiter)
 		{
 			int iterInd = (*eiter)->getEnd()->getIndex();
-			cout << (*eiter)->getBegin()->getIndex() << "..." << iterInd << endl;
+			//cout << (*eiter)->getBegin()->getIndex() << "..." << iterInd << endl;
 
 			if (ord[iterInd] == -1)
 			{
 				laborEdge++;
 				this->edgesArray.append(*eiter);
-				cout << "from" << currInd << "to" << iterInd << endl;
+				cout << "from " << currInd << " to " << iterInd << endl;
 				solveC(Edge_t(currvrtx, (*eiter)->getEnd()));
 			}
 			else if (iterInd == currInd)
 				{
 					laborEdge++;
 					this->edgesArray.append(*eiter);
-					cout << "from__" << currInd << "to" << iterInd << endl;
+					cout << "from " << currInd << " to " << iterInd << endl;
 
 					this->edgesArray.append(*eiter);
-					cout << "from__" << iterInd << "to" << currInd << endl;
+					cout << "from " << iterInd << " to " << currInd << endl;
 				}
 				else if (ord[iterInd] < ord[fromInd])
 					{
 						laborEdge++;
 						this->edgesArray.append(*eiter);
-						cout << "from" << currInd << "to" << iterInd << endl;
+						cout << "from " << currInd << " to " << iterInd << endl;
 
 						this->edgesArray.append(pgraph->getEdge((*eiter)->getEnd(), currvrtx));
 
-					cout << "from" << iterInd << "to" << currInd << endl;
+					cout << "from " << iterInd << " to " << currInd << endl;
 					}
 		}
 
 		if (fromInd != currInd)
 		{
 			this->edgesArray.append(pgraph->getEdge(currvrtx, other.getBegin()));
-			cout << "from" << currInd << "to" << fromInd << endl;
+			cout << "from " << currInd << " to " << fromInd << endl;
 		}
 		else
 		{
 			cout << "." << endl;
 		}
-		cout << "up from" << currInd << endl;
+//		cout << "up from " << currInd << endl;
 	}
 
 	void solve()
 	{
 		laborVertex = 0;
 		laborEdge = 0;
+		cnt = 0;
+
 		ord.resize(pgraph->vertexCount());
 		for (int i = 0; i < pgraph->vertexCount(); i++)
 			ord[i] = -1;
@@ -104,7 +106,7 @@ private:
 
 		QVector<int>::iterator one = ord.begin();
 		for (;one != ord.end(); one++)
-			cout << *one;
+			cout << (*one) << endl;
 	}
 
 	int operator[] (int v) { return ord[v]; }
@@ -139,21 +141,22 @@ public:
 	{
 		if (pgraph->vertexCount() == 0)
 			return;
-		return (this->solve());
+		this->solve();
 	}
 
 	QVector<Edge_t*> result()
 	{
+		cout << "edge from...to";
 		typename QVector<Edge_t*>::iterator i = edgesArray.begin();
 		for (; i != edgesArray.end(); i++)
 		{
 			cout << *i << "   " << (*i)->getBegin()->getIndex() << "..." << (*i)->getEnd()->getIndex() << endl;
 		}
 
-		cout << "edges labortness" << laborEdge  << endl;
-		cout << "vertex labortness" << laborVertex << endl;
-		cout << "full labortness" << laborEdge + laborVertex << endl;
-		cout << "edges + vertexes" << pgraph->edgeCount() + pgraph->vertexCount() << endl << endl;
+		cout << "edges labortness: " << laborEdge  << endl;
+		cout << "vertex labortness: " << laborVertex << endl;
+		cout << "full labortness: " << laborEdge + laborVertex << endl;
+		cout << "edges + vertexes: " << pgraph->edgeCount() + pgraph->vertexCount() << endl << endl;
 		return edgesArray;
 	}
 };

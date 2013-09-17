@@ -74,6 +74,13 @@ private:
 				{
 					if (pathSize[toind]->lenth > (pathSize[fromind]->lenth + (*eiter)->getWeight()))
 					{
+						cout << "to vertex " << toind << endl
+							 << " path from " << pathSize[toind]->lenth
+							 << " to " << (pathSize[fromind]->lenth + (*eiter)->getWeight()) << endl
+							 << " parent from " << pathSize[toind]->parent
+							 << " to " << from->getIndex()
+							 << endl << endl;
+
 						pathSize[toind]->lenth = (pathSize[fromind]->lenth + (*eiter)->getWeight());
 						pathSize[toind]->parent = from->getIndex();
 					}
@@ -90,6 +97,7 @@ private:
 			Vertex_t* to = (*eiter)->getEnd();
 			if (pathSize[to->getIndex()]->lenth > (pathSize[from->getIndex()]->lenth + (*eiter)->getWeight()))
 			{
+				cout << "there is no way!" << endl << endl;
 				correct = false;
 				return false;
 			}
@@ -174,16 +182,17 @@ public:
 
 		if (!correct)
 		{
-			cout << "Wrong solution!" << endl;
+			cout << "No way!" << endl;
 			return tmp;
 		}
 
+		cout << "index lenth parent" << endl;
 		for (int i = 0; i < vrtxCount; i++)
 		{
 			if (pathSize[i]->lenth < maxLenth)
 			{
 				tmp.append(pathSize[i]->vertex);
-				cout << pathSize[i]->lenth << " : " << pathSize[i]->parent << endl;
+				cout << i << " " << pathSize[i]->lenth << " : " << pathSize[i]->parent << endl;
 			}
 		}
 

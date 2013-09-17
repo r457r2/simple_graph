@@ -101,20 +101,26 @@ public:
 	repeater (Graph<Vertex_t, Edge_t>& grph) : graph(grph)
 	{
 		qsrand(time_t(NULL));
-		for (typename Graph<Vertex_t, Edge_t>::EdgeIterator eiter = graph.edgeBegin(); eiter != graph.edgeEnd(); ++eiter)
+		if (graph.vertexCount() != 0)
 		{
-			int weight = qrand() % graph.edgeCount();
-			if ((qrand() % 5) == 0)
-					weight = (-1) * weight;
+			for (typename Graph<Vertex_t, Edge_t>::EdgeIterator eiter = graph.edgeBegin(); eiter != graph.edgeEnd(); ++eiter)
+			{
+				int weight = qrand() % graph.edgeCount();
+				if ((qrand() % 5) == 0)
+						weight = (-1) * weight;
 
-			(*eiter)->setWeight(weight);
+				(*eiter)->setWeight(weight);
+			}
 		}
 	}
 
 	void repeat()
 	{
-		//one.set(&graph);
-		two.set(&graph, *(graph.vertexBegin()));
+		if ((graph.isDirected() == false) && (graph.vertexCount() != 0))
+			one.set(&graph);
+		if ((graph.isDirected() == true) && (graph.vertexCount() != 0))
+			two.set(&graph, *(graph.vertexBegin()));
+
 		bool cont = true;
 
 		showMenu();
@@ -130,6 +136,11 @@ public:
 			{
 			case 0:
 			{
+				if (graph.vertexCount() == 0)
+				{
+					cout << "Graph is empty!" << endl << endl;
+					break;
+				}
 				showVertexes();
 				showEdges();
 				break;
@@ -200,7 +211,7 @@ public:
 				Vertex_t* tovrt = getVertex(index2);
 				if ((fromvrt == NULL) || (tovrt == NULL))
 				{
-					cout << "Wrong vertexes." << endl;
+					cout << "Wrong vertexes." << endl << endl;
 					break;
 				}
 
@@ -224,21 +235,15 @@ public:
 
 			case 7:
 			{
-				if (graph.toListGraph() == true)
-					cout << "Transformation success." << endl << endl;
-				else
-					cout << "Transformation failed." << endl << endl;
-
+				graph.toListGraph();
+				cout << "Transformation to List compleate." << endl << endl;
 				break;
 			}
-//падает
+
 			case 8:
 			{
-				if (graph.toMatrixGraph() == true)
-					cout << "Transformation success." << endl << endl;
-				else
-					cout << "Transformation failed." << endl << endl;
-
+				graph.toMatrixGraph();
+				cout << "Transformation to Matrix compleate." << endl << endl;
 				break;
 			}
 
@@ -664,15 +669,39 @@ public:
 				}
 				break;
 			}
-//не работает
+
 			case 17:
-			{one.restart(); cout << endl; break;}
+			{
+				if ((graph.isDirected() == true) || (graph.vertexCount() == 0))
+				{
+					cout << "Wrong graph." << endl << endl;
+					break;
+				}
+				one.restart();
+				cout << endl;
+				break;
+			}
 
 			case 18:
-			{one.result(); cout << endl; break;}
+			{
+				if ((graph.isDirected() == true) || (graph.vertexCount() == 0))
+				{
+					cout << "Wrong graph." << endl << endl;
+					break;
+				}
+				one.result();
+				cout << endl;
+				break;
+			}
 
 			case 19:
 			{
+				if ((graph.isDirected() == false) || (graph.vertexCount() == 0))
+				{
+					cout << "Wrong graph." << endl << endl;
+					break;
+				}
+
 				showVertexes();
 				cout << "Select vertex: ";
 				int index;
@@ -683,12 +712,22 @@ public:
 					cout << "Wrong index." << endl << endl;
 					break;
 				}
+
 				two.restart(getVertex(index));
 				break;
 			}
 
 			case 20:
-			{two.result(); cout << endl; break;}
+			{
+				if ((graph.isDirected() == false) || (graph.vertexCount() == 0))
+				{
+					cout << "Wrong graph." << endl << endl;
+					break;
+				}
+				two.result();
+				cout << endl;
+				break;
+			}
 
 			case 21:
 			{showMenu(); break;}
