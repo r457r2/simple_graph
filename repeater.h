@@ -4,7 +4,8 @@
 #include "VertexDescriptor.h"
 #include "EdgeDescriptor.h"
 #include "Graph.h"
-#include "iostream"
+#include <iostream>
+#include <iomanip>
 
 #include "TaskOne.h"
 #include "TaskTwo.h"
@@ -22,10 +23,13 @@ private:
 	void showVertexes ()
 	{
 		cout << "Vertexes:" << endl;
+		cout << "     Index   Address      Name" << endl;
 		typename Graph<Vertex_t,Edge_t>::VertexIterator viter = graph.vertexBegin();
 		while (viter != graph.vertexEnd())
 		{
-			cout << (*viter)->getIndex() << "   " << (*viter) << "   " << (*viter)->getName()<< endl;
+			cout << setw(10) << right << (*viter)->getIndex()
+				 << setw(10) << right << (*viter)
+				 << (*viter)->getName()<< endl;
 			++viter;
 		}
 		cout << endl << endl;
@@ -44,28 +48,32 @@ private:
 
 			++viter;
 		}
+		return NULL;
 	}
 
 	void showEdges ()
 	{
 		int index = 0;
 		cout << "Edges:" << endl;
+		cout << "         N   Address    Weight      Edge" << endl;
 		typename Graph<Vertex_t,Edge_t>::EdgeIterator viter = graph.edgeBegin();
 		while (viter != graph.edgeEnd())
 		{
 
 			if (graph.isDirected() == true)
 			{
-				cout << index << ":   " << (*viter) << "   "
-					 << (*viter)->getWeight() << "   "
-					 << (*viter)->getBegin()->getIndex() << "--->" << (*viter)->getEnd()->getIndex() << endl;
+				cout << setw(10) << right << index
+					 << setw(10) << right << (*viter)
+					 << setw(10) << right << (*viter)->getWeight()
+					 << "      " << (*viter)->getBegin()->getIndex() << "--->" << (*viter)->getEnd()->getIndex() << endl;
 				index++;
 			}
 			else if ((*viter)->getBegin() <= (*viter)->getEnd())
 				 {
-					 cout << index << ":   " << (*viter) << "   "
-						  << (*viter)->getWeight() << "   "
-						  << (*viter)->getBegin()->getIndex() << "----" << (*viter)->getEnd()->getIndex() << endl;
+					cout << setw(10) << right << index
+						 << setw(10) << right << (*viter)
+						 << setw(10) << right << (*viter)->getWeight()
+						 << "      " << (*viter)->getBegin()->getIndex() << "----" << (*viter)->getEnd()->getIndex() << endl;
 					 index++;
 				 }
 
@@ -155,7 +163,7 @@ public:
 
 			case 2:
 			{
-				cout << "Insert vertex index: ";
+				cout << "Input vertex index: ";
 				int index;
 				cin >> index;
 				Vertex_t* vrt = getVertex(index);
@@ -171,17 +179,24 @@ public:
 
 			case 3:
 			{
-				cout << "Insert from and to vertexes indexes: ";
+				cout << "Input from and to vertexes indexes: ";
 				int index1,	index2;
 				cin >> index1 >> index2;
 				Vertex_t* fromvrt = getVertex(index1);
 				Vertex_t* tovrt = getVertex(index2);
 				if ((fromvrt != NULL) && (tovrt != NULL))
 				{
+					Edge_t *edge = graph.insertEdge(fromvrt, tovrt);
+					if(!edge)
+					{
+						cout << "Couldn't add." << endl << endl;
+						break;
+					}
+
 					int weight = qrand() % graph.edgeCount();
 					if ((qrand() % 5) == 0)
 							weight = (-1) * weight;
-					(graph.insertEdge(fromvrt, tovrt))->setWeight(weight);
+					edge->setWeight(weight);
 					cout << "Success."<< endl << endl;
 					break;
 				}
@@ -196,9 +211,9 @@ public:
 				cin >> index1 >> index2;
 				Vertex_t* fromvrt = getVertex(index1);
 				Vertex_t* tovrt = getVertex(index2);
-				if ((fromvrt != NULL) && (tovrt != NULL))
+				if ((fromvrt != NULL) && (tovrt != NULL) && graph.deleteEdge(fromvrt, tovrt))
 				{
-					graph.deleteEdge(fromvrt, tovrt);
+
 					cout << "Success." << endl << endl;
 					break;
 				}
@@ -215,14 +230,14 @@ public:
 				Vertex_t* tovrt = getVertex(index2);
 				if ((fromvrt == NULL) || (tovrt == NULL))
 				{
-					cout << "Wrong vertexes." << endl << endl;
+					cout << "Wrong index." << endl << endl;
 					break;
 				}
 
 				Edge_t* edge = graph.getEdge(fromvrt, tovrt);
 				if (edge == NULL)
 				{
-					cout << "No edge." << endl << endl;
+					cout << "No such edge." << endl << endl;
 					break;
 				}
 
@@ -240,14 +255,14 @@ public:
 			case 7:
 			{
 				graph.toListGraph();
-				cout << "Transformation to List compleate." << endl << endl;
+				cout << "Transformation to List complete." << endl << endl;
 				break;
 			}
 
 			case 8:
 			{
 				graph.toMatrixGraph();
-				cout << "Transformation to Matrix compleate." << endl << endl;
+				cout << "Transformation to Matrix complete." << endl << endl;
 				break;
 			}
 
@@ -289,7 +304,7 @@ public:
 				{
 					cout << endl
 						 << "0 - Increment vertex iterator" << endl
-						 << "1 - Take iterator" << endl
+						 << "1 - Get vertex" << endl
 						 << "2 - Set vertex name" << endl
 						 << "3 - Set vertex data" << endl
 						 << "4 - Finish work" << endl  << endl;
@@ -380,7 +395,7 @@ public:
 				{
 					cout << endl
 						 << "0 - Increment edge iterator" << endl
-						 << "1 - Take iterator" << endl
+						 << "1 - Get edge" << endl
 						 << "2 - Set edge weight" << endl
 						 << "3 - Set edge data" << endl
 						 << "4 - Finish work" << endl << endl;
@@ -477,7 +492,7 @@ public:
 				cin >> vindex;
 				if (vindex >= graph.vertexCount())
 				{
-					cout << "Vrong vertex." << endl << endl;
+					cout << "Wrong vertex." << endl << endl;
 					break;
 				}
 
