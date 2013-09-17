@@ -4,7 +4,8 @@
 #include "VertexDescriptor.h"
 #include "EdgeDescriptor.h"
 #include "Graph.h"
-#include "iostream"
+#include <iostream>
+#include <iomanip>
 
 #include "TaskOne.h"
 #include "TaskTwo.h"
@@ -22,10 +23,13 @@ private:
 	void showVertexes ()
 	{
 		cout << "Vertexes:" << endl;
+		cout << "     Index   Address      Name" << endl;
 		typename Graph<Vertex_t,Edge_t>::VertexIterator viter = graph.vertexBegin();
 		while (viter != graph.vertexEnd())
 		{
-			cout << (*viter)->getIndex() << "   " << (*viter) << "   " << (*viter)->getName()<< endl;
+			cout << setw(10) << right << (*viter)->getIndex()
+				 << setw(10) << right << (*viter)
+				 << (*viter)->getName()<< endl;
 			++viter;
 		}
 		cout << endl << endl;
@@ -44,28 +48,32 @@ private:
 
 			++viter;
 		}
+		return NULL;
 	}
 
 	void showEdges ()
 	{
 		int index = 0;
 		cout << "Edges:" << endl;
+		cout << "         N   Address    Weight      Edge" << endl;
 		typename Graph<Vertex_t,Edge_t>::EdgeIterator viter = graph.edgeBegin();
 		while (viter != graph.edgeEnd())
 		{
 
 			if (graph.isDirected() == true)
 			{
-				cout << index << ":   " << (*viter) << "   "
-					 << (*viter)->getWeight() << "   "
-					 << (*viter)->getBegin()->getIndex() << "--->" << (*viter)->getEnd()->getIndex() << endl;
+				cout << setw(10) << right << index
+					 << setw(10) << right << (*viter)
+					 << setw(10) << right << (*viter)->getWeight()
+					 << "      " << (*viter)->getBegin()->getIndex() << "--->" << (*viter)->getEnd()->getIndex() << endl;
 				index++;
 			}
 			else if ((*viter)->getBegin() <= (*viter)->getEnd())
 				 {
-					 cout << index << ":   " << (*viter) << "   "
-						  << (*viter)->getWeight() << "   "
-						  << (*viter)->getBegin()->getIndex() << "----" << (*viter)->getEnd()->getIndex() << endl;
+					cout << setw(10) << right << index
+						 << setw(10) << right << (*viter)
+						 << setw(10) << right << (*viter)->getWeight()
+						 << "      " << (*viter)->getBegin()->getIndex() << "----" << (*viter)->getEnd()->getIndex() << endl;
 					 index++;
 				 }
 
