@@ -27,4 +27,5 @@ HEADERS  += VertexDescriptor.h \
     graphtest.h \
     TaskOne.h \
     TaskTwo.h \
-    repeater.h
+    repeater.h \
+    spanningtreebuilder.h
