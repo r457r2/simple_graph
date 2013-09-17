@@ -400,10 +400,10 @@ public:
 
 	float getDensity (){return pgraph->getDensity();}
 
-	bool toListGraph ()
+	void toListGraph ()
 	{
 		if (type == LIST_REPR)
-			return true;
+			return;
 
 		Representation<Vertex_t, Edge_t>* newGraph = new ListRepr_t(pgraph->isDirected());
 		MatrixRepr_t *old_repr = static_cast<MatrixRepr_t *>(pgraph);
@@ -429,14 +429,12 @@ public:
 		delete pgraph;
 		type = LIST_REPR;
 		pgraph = newGraph;
-
-		return true;
 	}
 
-	bool toMatrixGraph ()
+	void toMatrixGraph ()
 	{
 		if (type == MATRIX_REPR)
-			return true;
+			return;
 
 		Representation<Vertex_t, Edge_t>* newGraph = new MatrixRepr_t(pgraph->isDirected());
 		ListRepr_t *old_repr = static_cast<ListRepr_t *>(pgraph);
@@ -460,8 +458,6 @@ public:
 		delete pgraph;
 		type = MATRIX_REPR;
 		pgraph = newGraph;
-
-		return true;
 	}
 
 	Vertex_t* insertVertex (){return pgraph->insertVertex();}
