@@ -144,25 +144,19 @@ public:
 						edge++;
 				}
 			}
+			while(!graph->isDirected()
+				&& edge != ((MatrixRepr_t*)graph)->matrix[graph->vertexCount() - 1].end()
+				&& (*edge)->getBegin()->getIndex() > (*edge)->getEnd()->getIndex())
+				this->operator++();
 			return *this;
 		}
 
-		// Reason to put const.
-		// You write this:
-		// Graph::EdgeIterator it = g.edgeBegin();
-		// while (it != g.edgeEnd()) <- and compiler refuses to compile this:
-		// no matching operator!=
-		// It is because you cannot bind a temporary object (which is created in
-		// that expression) to a non-const reference.
-		// Probably. At least it compiles.
 		bool operator== (const EdgeIterator& other)
 		{
 			return ((this->vertex == other.vertex)
 					&& (this->edge == other.edge));
 		}
 
-		// Okay, put const here. But what if it is self-assignment?
-		// We should spend some more time understanding this const-things.
 		EdgeIterator& operator=(const EdgeIterator& other)
 		{
 			this->type = other.type;
