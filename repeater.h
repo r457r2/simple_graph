@@ -151,6 +151,9 @@ public:
 				}
 				showVertexes();
 				showEdges();
+				cout << "Inner structure: " << endl;
+				graph.printInnerStructure();
+				cout << endl;
 				break;
 			}
 

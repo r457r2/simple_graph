@@ -1,6 +1,8 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 #include <stdexcept>
+#include <iostream>
+#include <iomanip>
 #include "Representation.h"
 #include "ListRepresentation.h"
 #include "MatrixRepresentation.h"
@@ -456,6 +458,45 @@ public:
 		delete pgraph;
 		type = MATRIX_REPR;
 		pgraph = newGraph;
+	}
+
+	void printInnerStructure()
+	{
+		if(type == MATRIX_REPR)
+		{
+			MatrixRepr_t *mgraph = static_cast<MatrixRepr_t *>(pgraph);
+
+			typename QList<Vertex_t *>::ConstIterator vi = mgraph->vertexes.constBegin();
+			std::cout << std::setw(4) << "";
+			for(; vi != mgraph->vertexes.constEnd(); ++vi)
+				std::cout << std::setw(2) << std::right << (*vi)->getUserIndex() << " ";
+			std::cout << std::endl;
+
+			vi = mgraph->vertexes.constBegin();
+			for(int i = 0; i < mgraph->matrix.count(); ++i, ++vi)
+			{
+				std::cout << std::setw(2) << std::right << (*vi)->getUserIndex() << ": ";
+				for(int j = 0; j < mgraph->matrix[i].count(); ++j)
+					std::cout << std::setw(2) << std::right << ((mgraph->matrix[i][j]) ? 'x' : 'o') << " ";
+				std::cout << std::endl;
+			}
+		}
+		else
+		{
+			ListRepr_t *lgraph = static_cast<ListRepr_t *>(pgraph);
+			typename QList<QList<Edge_t*> >::ConstIterator i;
+			int inner_idx = 0;
+			for(i = lgraph->list.constBegin(); i != lgraph->list.constEnd(); ++i, ++inner_idx)
+			{
+				std::cout << std::setw(5) << std::right << lgraph->vertexes[inner_idx]->getUserIndex() << ": ";
+				typename QList<Edge_t *>::ConstIterator j;
+				for(j = (*i).constBegin(); j != (*i).constEnd(); ++j)
+				{
+					std::cout << (*j)->getBegin()->getUserIndex() << "->" << (*j)->getEnd()->getUserIndex() << " ";
+				}
+				std::cout << std::endl;
+			}
+		}
 	}
 
 	Vertex_t* getVertexByIndex(int index){return pgraph->getVertexByIndex(index);}
