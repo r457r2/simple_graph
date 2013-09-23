@@ -103,8 +103,8 @@ private:
 			 << "20 - Show second task result      " << endl
 			 << "21 - Repeat this menu             " << endl
 			 << "22 - Finish work                  " << endl
-			 << "23 - Get vertex for chainge       " << endl
-			 << "24 - Get edge for chainge         " << endl << endl;
+			 << "23 - Edit vertex                  " << endl
+			 << "24 - Edit edge                     " << endl << endl;
 	}
 
 public:
@@ -763,13 +763,13 @@ public:
 				cin >> vindex;
 				if (vindex >= graph.vertexCount())
 				{
-					cout << "Wrong vertex." << endl;
+					cout << "Wrong index." << endl;
 					break;
 				}
 
-				Vertex_t* viter = getVertex(vindex);
-				bool contie = true;
-				while(contie)
+				Vertex_t* viter = graph.getVertexByIndex(vindex);
+				bool cont = true;
+				while(cont)
 				{
 					cout << endl
 						 << "0 - Show vertex" << endl
@@ -786,10 +786,11 @@ public:
 					{
 					case 0:
 					{
-						cout << setw(10) << right << (viter)->getIndex()
+						cout << setw(10) << right << (viter)->getUserIndex()
 							 << setw(10) << right << (viter)
 							 << setw(10) << right  << (viter)->getName()
 							 << setw(10) << right  << (viter)->getData() << endl;
+						break;
 					}
 
 					case 1:
@@ -798,6 +799,7 @@ public:
 						string str;
 						cin >> str;
 						(viter)->setName(str);
+						break;
 					}
 
 					case 2:
@@ -806,17 +808,18 @@ public:
 						int str;
 						cin >> str;
 						(viter)->setData(str);
+						break;
 					}
 
 					case 3:
 					{
 						cout  << endl << endl;
-						contie = false;
+						cont = false;
 						showMenu();
 						break;
 					}
 
-					default: {}
+					default: { break; }
 					}
 				}
 				break;
@@ -824,14 +827,15 @@ public:
 
 			case 24:
 			{
-				showVertexes();
-				cout << "Select edge: ";
+				showEdges();
+				cout << "Get begin vertex index: ";
 				int vindex;
 				cin >> vindex;
+				cout << "Get end vertex index: ";
 				int vindex2;
 				cin >> vindex2;
 
-				Edge_t* e = graph.getEdge(getVertex(vindex),getVertex(vindex2));
+				Edge_t* e = graph.getEdge(graph.getVertexByIndex(vindex),graph.getVertexByIndex(vindex2));
 				if (e == NULL)
 				{
 					cout << "Wrong edge." << endl;
@@ -858,7 +862,8 @@ public:
 					{
 						cout << setw(10) << right << e
 							 << setw(10) << right << e->getWeight()
-							 << "      " << e->getBegin()->getIndex() << "--->" << e->getEnd()->getIndex() << endl;
+							 << "      " << e->getBegin()->getIndex() << "--->" << e->getEnd()->getUserIndex() << endl;
+						break;
 					}
 
 					case 1:
@@ -867,6 +872,7 @@ public:
 						int str;
 						cin >> str;
 						e->setWeight(str);
+						break;
 					}
 
 					case 2:
@@ -875,6 +881,7 @@ public:
 						int str;
 						cin >> str;
 						e->setData(str);
+						break;
 					}
 
 					case 3:
@@ -885,13 +892,13 @@ public:
 						break;
 					}
 
-					default: {}
+					default: { break; }
 					}
 				}
 				break;
 			}
 
-			default: {}
+			default: { break; }
 			}
 		}
 	}
