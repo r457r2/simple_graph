@@ -104,8 +104,12 @@ public:
 
 	Vertex_t* insertVertex ()
 	{
+		int uidx = 0;
+		if(this->vertexes.count())
+			uidx = this->vertexes.last()->getUserIndex() + 1;
 		this->vertexes.append(new Vertex_t());
 		this->vertexes.last()->setIndex(this->vertexes.size() - 1);
+		this->vertexes.last()->setUserIndex(uidx);
 		list.append(QList<Edge_t*>());
 		return this->vertexes.last();
 	}

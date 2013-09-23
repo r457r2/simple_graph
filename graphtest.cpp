@@ -28,7 +28,7 @@ void GraphTest::correctnessTest()
 	assert(g.edgeCount() == 0);
 
 	// delete out of range foreign vertex
-	Vertex_t v_dummy(0, 0, 150);
+	Vertex_t v_dummy(0, 0, 150, 0);
 	assert(g.deleteVertex(&v_dummy) == false);
 	assert(g.vertexCount() == 0);
 	assert(g.edgeCount() == 0);
@@ -56,7 +56,7 @@ void GraphTest::correctnessTest()
 	assert(g.edgeCount() == 1);
 
 	// delete edge (foreign vertexes)
-	Vertex_t v_dummy2(1, 1, 1);
+	Vertex_t v_dummy2(1, 1, 1, 1);
 	assert(g.deleteEdge(&v_dummy, &v_dummy2) == false);
 	assert(g.vertexCount() == 2);
 	assert(g.edgeCount() == 1);

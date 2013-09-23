@@ -27,7 +27,7 @@ private:
 		typename Graph<Vertex_t,Edge_t>::VertexIterator viter = graph.vertexBegin();
 		while (viter != graph.vertexEnd())
 		{
-			cout << setw(10) << right << (*viter)->getIndex()
+			cout << setw(10) << right << (*viter)->getUserIndex()
 				 << setw(10) << right << (*viter)
 				 << (*viter)->getName()<< endl;
 			++viter;
@@ -37,13 +37,10 @@ private:
 
 	Vertex_t* getVertex (int index)
 	{
-		if (index >= graph.vertexCount())
-			return NULL;
-
 		typename Graph<Vertex_t,Edge_t>::VertexIterator viter = graph.vertexBegin();
 		while (viter != graph.vertexEnd())
 		{
-			if ((*viter)->getIndex() == index)
+			if ((*viter)->getUserIndex() == index)
 				return (*viter);
 
 			++viter;
@@ -59,23 +56,22 @@ private:
 		typename Graph<Vertex_t,Edge_t>::EdgeIterator viter = graph.edgeBegin();
 		while (viter != graph.edgeEnd())
 		{
-
 			if (graph.isDirected() == true)
 			{
 				cout << setw(10) << right << index
 					 << setw(10) << right << (*viter)
 					 << setw(10) << right << (*viter)->getWeight()
-					 << "      " << (*viter)->getBegin()->getIndex() << "--->" << (*viter)->getEnd()->getIndex() << endl;
+					 << "      " << (*viter)->getBegin()->getUserIndex() << "--->" << (*viter)->getEnd()->getUserIndex() << endl;
 				index++;
 			}
-			else if ((*viter)->getBegin() <= (*viter)->getEnd())
-				 {
-					cout << setw(10) << right << index
-						 << setw(10) << right << (*viter)
-						 << setw(10) << right << (*viter)->getWeight()
-						 << "      " << (*viter)->getBegin()->getIndex() << "----" << (*viter)->getEnd()->getIndex() << endl;
-					 index++;
-				 }
+			else //if ((*viter)->getBegin()->getUserIndex() <= (*viter)->getEnd()->getUserIndex())
+			{
+				cout << setw(10) << right << index
+					 << setw(10) << right << (*viter)
+					 << setw(10) << right << (*viter)->getWeight()
+					 << "      " << (*viter)->getBegin()->getUserIndex() << "----" << (*viter)->getEnd()->getUserIndex() << endl;
+				index++;
+			}
 
 			++viter;
 		}
@@ -333,7 +329,7 @@ public:
 							break;
 						}
 						cout << (*viter) << "   "
-							 << (*viter)->getIndex() << "   "
+							 << (*viter)->getUserIndex() << "   "
 							 << (*viter)->getName() << "   "
 							 << (*viter)->getData() << endl << endl;
 
@@ -427,12 +423,12 @@ public:
 						if (graph.isDirected() == true)
 							cout << (*eiter) << "   "
 								 << (*eiter)->getWeight() << "   "
-								 << (*eiter)->getBegin()->getIndex() << "--->" << (*eiter)->getEnd()->getIndex() << "   "
+								 << (*eiter)->getBegin()->getUserIndex() << "--->" << (*eiter)->getEnd()->getUserIndex() << "   "
 								 << (*eiter)->getData() << endl << endl;
 						else
 							cout << (*eiter) << "   "
 								 << (*eiter)->getWeight() << "   "
-								 << (*eiter)->getBegin()->getIndex() << "----" << (*eiter)->getEnd()->getIndex() << "   "
+								 << (*eiter)->getBegin()->getUserIndex() << "----" << (*eiter)->getEnd()->getUserIndex() << "   "
 								 << (*eiter)->getData() << endl << endl;
 						break;
 					}
@@ -534,12 +530,12 @@ public:
 						if (graph.isDirected() == true)
 							cout << (*oeiter) << "   "
 								 << (*oeiter)->getWeight() << "   "
-								 << (*oeiter)->getBegin()->getIndex() << "--->" << (*oeiter)->getEnd()->getIndex() << "   "
+								 << (*oeiter)->getBegin()->getUserIndex() << "--->" << (*oeiter)->getEnd()->getUserIndex() << "   "
 								 << (*oeiter)->getData() << endl << endl;
 						else
 							cout << (*oeiter) << "   "
 								 << (*oeiter)->getWeight() << "   "
-								 << (*oeiter)->getBegin()->getIndex() << "----" << (*oeiter)->getEnd()->getIndex() << "   "
+								 << (*oeiter)->getBegin()->getUserIndex() << "----" << (*oeiter)->getEnd()->getUserIndex() << "   "
 								 << (*oeiter)->getData() << endl << endl;
 						break;
 					}
@@ -640,12 +636,12 @@ public:
 						if (graph.isDirected() == true)
 							cout << (*ieiter) << "   "
 								 << (*ieiter)->getWeight() << "   "
-								 << (*ieiter)->getBegin()->getIndex() << "--->" << (*ieiter)->getEnd()->getIndex() << "   "
+								 << (*ieiter)->getBegin()->getUserIndex() << "--->" << (*ieiter)->getEnd()->getUserIndex() << "   "
 								 << (*ieiter)->getData() << endl;
 						else
 							cout << (*ieiter) << "   "
 								 << (*ieiter)->getWeight() << "   "
-								 << (*ieiter)->getBegin()->getIndex() << "----" << (*ieiter)->getEnd()->getIndex() << "   "
+								 << (*ieiter)->getBegin()->getUserIndex() << "----" << (*ieiter)->getEnd()->getUserIndex() << "   "
 								 << (*ieiter)->getData() << endl;
 						break;
 					}

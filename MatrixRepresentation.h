@@ -121,6 +121,9 @@ public:
 		Vertex_t *vtx = new Vertex_t();
 		this->vertexes.append(vtx);
 		int index = this->vertexes.count() - 1;
+		int uidx = 0;
+		if(this->vertexes.count())
+			uidx = this->vertexes.last()->getUserIndex() + 1;
 
 		matrix.append(QList<Edge_t *>());
 		for(int i = 0; i < index + 1; i++)
@@ -131,6 +134,7 @@ public:
 		}
 
 		vtx->setIndex(index);
+		vtx->setUserIndex(uidx);
 		return vtx;
 	}
 

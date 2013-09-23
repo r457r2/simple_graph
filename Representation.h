@@ -57,6 +57,22 @@ public:
 		return ((float) (2 * edgeCount())) / vertexCount();
 	}
 
+	Vertex_t *getVertexByIndex(int uidx)
+	{
+		int first, last;
+		while(first <= last)
+		{
+			int mid = (last - first) / 2;
+			if(vertexes[mid].getUserIndex() > uidx)
+				last = mid - 1;
+			else if(vertexes[mid].getUserIndex() < uidx)
+				first = mid + 1;
+			else
+				return vertexes[mid];
+		}
+		return NULL;
+	}
+
 	virtual Vertex_t* insertVertex () = 0;
 	virtual bool deleteVertex (Vertex_t* _pvertex1) = 0;
 	virtual Edge_t* insertEdge (Vertex_t* _pvertex1, Vertex_t* _pvertex2) = 0;
