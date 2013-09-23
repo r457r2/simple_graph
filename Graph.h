@@ -414,6 +414,8 @@ public:
 				if (old_repr->matrix[i][j] != NULL)
 				{
 					Edge_t* newEdge = newGraph->insertEdge(newGraph->vertexes[i], newGraph->vertexes[j]);
+					if(!pgraph->isDirected() && i > j) // i >= j ?
+						newEdge = newGraph->getEdge(newGraph->vertexes[i], newGraph->vertexes[j]);
 					newEdge->setWeight((static_cast<MatrixRepr_t*>(pgraph))->matrix[i][j]->getWeight());
 					newEdge->setData((static_cast<MatrixRepr_t*>(pgraph))->matrix[i][j]->getData());
 				}
@@ -444,6 +446,8 @@ public:
 			{
 				int index = old_repr->list[i][j]->getEnd()->getIndex();
 				Edge_t* newEdge = newGraph->insertEdge(newGraph->vertexes[i], newGraph->vertexes[index]);
+				if(!pgraph->isDirected() && i > index) // >= ?
+					newEdge = newGraph->getEdge(newGraph->vertexes[i], newGraph->vertexes[index]);
 				newEdge->setWeight(old_repr->list[i][j]->getWeight());
 				newEdge->setData(old_repr->list[i][j]->getData());
 			}

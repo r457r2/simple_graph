@@ -44,6 +44,7 @@ public:
 		name = other.getName();
 		data = other.getData();
 		index = other.getIndex();
+		user_index = other.getUserIndex();
 		return *this;
 	}
 };
