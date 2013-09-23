@@ -60,12 +60,14 @@ public:
 	Vertex_t *getVertexByIndex(int uidx)
 	{
 		int first, last;
+		first = 0;
+		last = vertexes.count() - 1;
 		while(first <= last)
 		{
-			int mid = (last - first) / 2;
-			if(vertexes[mid].getUserIndex() > uidx)
+			int mid = (last - first) / 2 + first;
+			if(vertexes[mid]->getUserIndex() > uidx)
 				last = mid - 1;
-			else if(vertexes[mid].getUserIndex() < uidx)
+			else if(vertexes[mid]->getUserIndex() < uidx)
 				first = mid + 1;
 			else
 				return vertexes[mid];

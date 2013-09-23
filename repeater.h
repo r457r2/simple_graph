@@ -162,7 +162,7 @@ public:
 				cout << "Input vertex index: ";
 				int index;
 				cin >> index;
-				Vertex_t* vrt = getVertex(index);
+				Vertex_t* vrt = graph.getVertexByIndex(index);
 				if (vrt != NULL)
 				{
 					graph.deleteVertex(vrt);
@@ -178,8 +178,8 @@ public:
 				cout << "Input from and to vertexes indexes: ";
 				int index1,	index2;
 				cin >> index1 >> index2;
-				Vertex_t* fromvrt = getVertex(index1);
-				Vertex_t* tovrt = getVertex(index2);
+				Vertex_t* fromvrt = graph.getVertexByIndex(index1);
+				Vertex_t* tovrt = graph.getVertexByIndex(index2);
 				if ((fromvrt != NULL) && (tovrt != NULL))
 				{
 					Edge_t *edge = graph.insertEdge(fromvrt, tovrt);
@@ -205,8 +205,8 @@ public:
 				cout << "Insert from and to vertexes indexes: ";
 				int index1,	index2;
 				cin >> index1 >> index2;
-				Vertex_t* fromvrt = getVertex(index1);
-				Vertex_t* tovrt = getVertex(index2);
+				Vertex_t* fromvrt = graph.getVertexByIndex(index1);
+				Vertex_t* tovrt = graph.getVertexByIndex(index2);
 				if ((fromvrt != NULL) && (tovrt != NULL) && graph.deleteEdge(fromvrt, tovrt))
 				{
 
@@ -222,8 +222,8 @@ public:
 				cout << "Insert from and to vertexes indexes: ";
 				int index1,	index2;
 				cin >> index1 >> index2;
-				Vertex_t* fromvrt = getVertex(index1);
-				Vertex_t* tovrt = getVertex(index2);
+				Vertex_t* fromvrt = graph.getVertexByIndex(index1);
+				Vertex_t* tovrt = graph.getVertexByIndex(index2);
 				if ((fromvrt == NULL) || (tovrt == NULL))
 				{
 					cout << "Wrong index." << endl << endl;
@@ -492,7 +492,7 @@ public:
 					break;
 				}
 
-				typename Graph<Vertex_t,Edge_t>::OutgoingEdgeIterator oeiter = graph.outgoingEdgeBegin(getVertex(vindex));
+				typename Graph<Vertex_t,Edge_t>::OutgoingEdgeIterator oeiter = graph.outgoingEdgeBegin(graph.getVertexByIndex(vindex));
 				bool contoe = true;
 				while(contoe)
 				{
@@ -512,7 +512,7 @@ public:
 					{
 					case 0:
 					{
-						if (oeiter == graph.outgoingEdgeEnd(getVertex(vindex)))
+						if (oeiter == graph.outgoingEdgeEnd(graph.getVertexByIndex(vindex)))
 							break;
 
 						++oeiter;
@@ -521,7 +521,7 @@ public:
 
 					case 1:
 					{
-						if (oeiter == graph.outgoingEdgeEnd(getVertex(vindex)))
+						if (oeiter == graph.outgoingEdgeEnd(graph.getVertexByIndex(vindex)))
 						{
 							cout << "Couldn't get data." << endl << endl;
 							break;
@@ -542,7 +542,7 @@ public:
 
 					case 2:
 					{
-						if (oeiter == graph.outgoingEdgeEnd(getVertex(vindex)))
+						if (oeiter == graph.outgoingEdgeEnd(graph.getVertexByIndex(vindex)))
 						{
 							cout << "Couldn't set edge weight." << endl << endl;
 							break;
@@ -555,7 +555,7 @@ public:
 
 					case 3:
 					{
-						if (oeiter == graph.outgoingEdgeEnd(getVertex(vindex)))
+						if (oeiter == graph.outgoingEdgeEnd(graph.getVertexByIndex(vindex)))
 						{
 							cout << "Couldn't set edge data." << endl << endl;
 						}
@@ -598,7 +598,7 @@ public:
 					break;
 				}
 
-				typename Graph<Vertex_t,Edge_t>::IncomingEdgeIterator ieiter = graph.incomingEdgeBegin(getVertex(vindex));
+				typename Graph<Vertex_t,Edge_t>::IncomingEdgeIterator ieiter = graph.incomingEdgeBegin(graph.getVertexByIndex(vindex));
 				bool contie = true;
 				while(contie)
 				{
@@ -618,7 +618,7 @@ public:
 					{
 					case 0:
 					{
-						if (ieiter == graph.incomingEdgeEnd(getVertex(vindex)))
+						if (ieiter == graph.incomingEdgeEnd(graph.getVertexByIndex(vindex)))
 							break;
 
 						++ieiter;
@@ -627,7 +627,7 @@ public:
 
 					case 1:
 					{
-						if (ieiter == graph.incomingEdgeEnd(getVertex(vindex)))
+						if (ieiter == graph.incomingEdgeEnd(graph.getVertexByIndex(vindex)))
 						{
 							cout << "Couldn't get data." << endl;
 							break;
@@ -648,7 +648,7 @@ public:
 
 					case 2:
 					{
-						if (ieiter == graph.incomingEdgeEnd(getVertex(vindex)))
+						if (ieiter == graph.incomingEdgeEnd(graph.getVertexByIndex(vindex)))
 						{
 							cout << "Couldn't set edge weight." << endl;
 							break;
@@ -660,7 +660,7 @@ public:
 
 					case 3:
 					{
-						if (ieiter == graph.incomingEdgeEnd(getVertex(vindex)))
+						if (ieiter == graph.incomingEdgeEnd(graph.getVertexByIndex(vindex)))
 						{
 							cout << "Couldn't set edge data." << endl;
 							break;

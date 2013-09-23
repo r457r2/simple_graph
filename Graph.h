@@ -454,6 +454,7 @@ public:
 		pgraph = newGraph;
 	}
 
+	Vertex_t* getVertexByIndex(int index){return pgraph->getVertexByIndex(index);}
 	Vertex_t* insertVertex (){return pgraph->insertVertex();}
 	bool deleteVertex (Vertex_t *_pvertex1){return pgraph->deleteVertex(_pvertex1);}
 	Edge_t* insertEdge (Vertex_t *_pvertex1, Vertex_t *_pvertex2){return pgraph->insertEdge(_pvertex1, _pvertex2);}
