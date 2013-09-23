@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 {
 	QCoreApplication a(argc, argv);
 
-	MyGraph one(5,20,true,LIST_REPR);
+	MyGraph one(5,7,false,LIST_REPR);
 	repeater<Vertex_t, Edge_t> rep(one);
 	rep.repeat();
 

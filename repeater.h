@@ -106,7 +106,9 @@ private:
 			 << "19 - Solve second task            " << endl
 			 << "20 - Show second task result      " << endl
 			 << "21 - Repeat this menu             " << endl
-			 << "22 - Finish work                  " << endl << endl;
+			 << "22 - Finish work                  " << endl
+			 << "23 - Get vertex for chainge       " << endl
+			 << "24 - Get edge for chainge         " << endl << endl;
 	}
 
 public:
@@ -753,6 +755,142 @@ public:
 
 			case 22:
 			{cont = false; break;}
+
+			case 23:
+			{
+				showVertexes();
+				cout << "Select vertex: ";
+				int vindex;
+				cin >> vindex;
+				if (vindex >= graph.vertexCount())
+				{
+					cout << "Wrong vertex." << endl;
+					break;
+				}
+
+				Vertex_t* viter = getVertex(vindex);
+				bool contie = true;
+				while(contie)
+				{
+					cout << endl
+						 << "0 - Show vertex" << endl
+						 << "1 - Set name" << endl
+						 << "2 - Set data" << endl
+						 << "3 - Finish work" << endl;
+
+					int echoise;
+					cout << "Your choise: ";
+					cin >> echoise;
+					cout << endl << endl;
+
+					switch(echoise)
+					{
+					case 0:
+					{
+						cout << setw(10) << right << (viter)->getIndex()
+							 << setw(10) << right << (viter)
+							 << setw(10) << right  << (viter)->getName()
+							 << setw(10) << right  << (viter)->getData() << endl;
+					}
+
+					case 1:
+					{
+						cout << "Print new name" << endl;
+						string str;
+						cin >> str;
+						(viter)->setName(str);
+					}
+
+					case 2:
+					{
+						cout << "Print new data" << endl;
+						int str;
+						cin >> str;
+						(viter)->setData(str);
+					}
+
+					case 3:
+					{
+						cout  << endl << endl;
+						contie = false;
+						showMenu();
+						break;
+					}
+
+					default: {}
+					}
+				}
+				break;
+			}
+
+			case 24:
+			{
+				showVertexes();
+				cout << "Select edge: ";
+				int vindex;
+				cin >> vindex;
+				int vindex2;
+				cin >> vindex2;
+
+				Edge_t* e = graph.getEdge(getVertex(vindex),getVertex(vindex2));
+				if (e == NULL)
+				{
+					cout << "Wrong edge." << endl;
+					break;
+				}
+
+				bool contie = true;
+				while(contie)
+				{
+					cout << endl
+						 << "0 - Show edge" << endl
+						 << "1 - Set weignt" << endl
+						 << "2 - Set data" << endl
+						 << "3 - Finish work" << endl;
+
+					int echoise;
+					cout << "Your choise: ";
+					cin >> echoise;
+					cout << endl << endl;
+
+					switch(echoise)
+					{
+					case 0:
+					{
+						cout << setw(10) << right << e
+							 << setw(10) << right << e->getWeight()
+							 << "      " << e->getBegin()->getIndex() << "--->" << e->getEnd()->getIndex() << endl;
+					}
+
+					case 1:
+					{
+						cout << "Print new weight" << endl;
+						int str;
+						cin >> str;
+						e->setWeight(str);
+					}
+
+					case 2:
+					{
+						cout << "Print new data" << endl;
+						int str;
+						cin >> str;
+						e->setData(str);
+					}
+
+					case 3:
+					{
+						cout  << endl << endl;
+						contie = false;
+						showMenu();
+						break;
+					}
+
+					default: {}
+					}
+				}
+				break;
+			}
 
 			default: {}
 			}
