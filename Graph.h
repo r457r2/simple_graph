@@ -1,6 +1,8 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 #include <stdexcept>
+#include <iostream>
+#include <iomanip>
 #include "Representation.h"
 #include "ListRepresentation.h"
 #include "MatrixRepresentation.h"
@@ -144,25 +146,19 @@ public:
 						edge++;
 				}
 			}
+			while(!graph->isDirected()
+				&& edge != ((MatrixRepr_t*)graph)->matrix[graph->vertexCount() - 1].end()
+				&& (*edge)->getBegin()->getIndex() > (*edge)->getEnd()->getIndex())
+				this->operator++();
 			return *this;
 		}
 
-		// Reason to put const.
-		// You write this:
-		// Graph::EdgeIterator it = g.edgeBegin();
-		// while (it != g.edgeEnd()) <- and compiler refuses to compile this:
-		// no matching operator!=
-		// It is because you cannot bind a temporary object (which is created in
-		// that expression) to a non-const reference.
-		// Probably. At least it compiles.
 		bool operator== (const EdgeIterator& other)
 		{
 			return ((this->vertex == other.vertex)
 					&& (this->edge == other.edge));
 		}
 
-		// Okay, put const here. But what if it is self-assignment?
-		// We should spend some more time understanding this const-things.
 		EdgeIterator& operator=(const EdgeIterator& other)
 		{
 			this->type = other.type;
@@ -420,6 +416,8 @@ public:
 				if (old_repr->matrix[i][j] != NULL)
 				{
 					Edge_t* newEdge = newGraph->insertEdge(newGraph->vertexes[i], newGraph->vertexes[j]);
+					if(!pgraph->isDirected() && i > j) // i >= j ?
+						newEdge = newGraph->getEdge(newGraph->vertexes[i], newGraph->vertexes[j]);
 					newEdge->setWeight((static_cast<MatrixRepr_t*>(pgraph))->matrix[i][j]->getWeight());
 					newEdge->setData((static_cast<MatrixRepr_t*>(pgraph))->matrix[i][j]->getData());
 				}
@@ -450,6 +448,8 @@ public:
 			{
 				int index = old_repr->list[i][j]->getEnd()->getIndex();
 				Edge_t* newEdge = newGraph->insertEdge(newGraph->vertexes[i], newGraph->vertexes[index]);
+				if(!pgraph->isDirected() && i > index) // >= ?
+					newEdge = newGraph->getEdge(newGraph->vertexes[i], newGraph->vertexes[index]);
 				newEdge->setWeight(old_repr->list[i][j]->getWeight());
 				newEdge->setData(old_repr->list[i][j]->getData());
 			}
@@ -460,6 +460,46 @@ public:
 		pgraph = newGraph;
 	}
 
+	void printInnerStructure()
+	{
+		if(type == MATRIX_REPR)
+		{
+			MatrixRepr_t *mgraph = static_cast<MatrixRepr_t *>(pgraph);
+
+			typename QList<Vertex_t *>::ConstIterator vi = mgraph->vertexes.constBegin();
+			std::cout << std::setw(4) << "";
+			for(; vi != mgraph->vertexes.constEnd(); ++vi)
+				std::cout << std::setw(2) << std::right << (*vi)->getUserIndex() << " ";
+			std::cout << std::endl;
+
+			vi = mgraph->vertexes.constBegin();
+			for(int i = 0; i < mgraph->matrix.count(); ++i, ++vi)
+			{
+				std::cout << std::setw(2) << std::right << (*vi)->getUserIndex() << ": ";
+				for(int j = 0; j < mgraph->matrix[i].count(); ++j)
+					std::cout << std::setw(2) << std::right << ((mgraph->matrix[i][j]) ? 'x' : '-') << " ";
+				std::cout << std::endl;
+			}
+		}
+		else
+		{
+			ListRepr_t *lgraph = static_cast<ListRepr_t *>(pgraph);
+			typename QList<QList<Edge_t*> >::ConstIterator i;
+			int inner_idx = 0;
+			for(i = lgraph->list.constBegin(); i != lgraph->list.constEnd(); ++i, ++inner_idx)
+			{
+				std::cout << std::setw(5) << std::right << lgraph->vertexes[inner_idx]->getUserIndex() << ": ";
+				typename QList<Edge_t *>::ConstIterator j;
+				for(j = (*i).constBegin(); j != (*i).constEnd(); ++j)
+				{
+					std::cout << (*j)->getBegin()->getUserIndex() << "->" << (*j)->getEnd()->getUserIndex() << " ";
+				}
+				std::cout << std::endl;
+			}
+		}
+	}
+
+	Vertex_t* getVertexByIndex(int index){return pgraph->getVertexByIndex(index);}
 	Vertex_t* insertVertex (){return pgraph->insertVertex();}
 	bool deleteVertex (Vertex_t *_pvertex1){return pgraph->deleteVertex(_pvertex1);}
 	Edge_t* insertEdge (Vertex_t *_pvertex1, Vertex_t *_pvertex2){return pgraph->insertEdge(_pvertex1, _pvertex2);}

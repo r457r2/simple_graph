@@ -27,7 +27,7 @@ private:
 		typename Graph<Vertex_t,Edge_t>::VertexIterator viter = graph.vertexBegin();
 		while (viter != graph.vertexEnd())
 		{
-			cout << setw(10) << right << (*viter)->getIndex()
+			cout << setw(10) << right << (*viter)->getUserIndex()
 				 << setw(10) << right << (*viter)
 				 << (*viter)->getName()<< endl;
 			++viter;
@@ -37,13 +37,10 @@ private:
 
 	Vertex_t* getVertex (int index)
 	{
-		if (index >= graph.vertexCount())
-			return NULL;
-
 		typename Graph<Vertex_t,Edge_t>::VertexIterator viter = graph.vertexBegin();
 		while (viter != graph.vertexEnd())
 		{
-			if ((*viter)->getIndex() == index)
+			if ((*viter)->getUserIndex() == index)
 				return (*viter);
 
 			++viter;
@@ -59,23 +56,22 @@ private:
 		typename Graph<Vertex_t,Edge_t>::EdgeIterator viter = graph.edgeBegin();
 		while (viter != graph.edgeEnd())
 		{
-
 			if (graph.isDirected() == true)
 			{
 				cout << setw(10) << right << index
 					 << setw(10) << right << (*viter)
 					 << setw(10) << right << (*viter)->getWeight()
-					 << "      " << (*viter)->getBegin()->getIndex() << "--->" << (*viter)->getEnd()->getIndex() << endl;
+					 << "      " << (*viter)->getBegin()->getUserIndex() << "--->" << (*viter)->getEnd()->getUserIndex() << endl;
 				index++;
 			}
-			else if ((*viter)->getBegin() <= (*viter)->getEnd())
-				 {
-					cout << setw(10) << right << index
-						 << setw(10) << right << (*viter)
-						 << setw(10) << right << (*viter)->getWeight()
-						 << "      " << (*viter)->getBegin()->getIndex() << "----" << (*viter)->getEnd()->getIndex() << endl;
-					 index++;
-				 }
+			else //if ((*viter)->getBegin()->getUserIndex() <= (*viter)->getEnd()->getUserIndex())
+			{
+				cout << setw(10) << right << index
+					 << setw(10) << right << (*viter)
+					 << setw(10) << right << (*viter)->getWeight()
+					 << "      " << (*viter)->getBegin()->getUserIndex() << "----" << (*viter)->getEnd()->getUserIndex() << endl;
+				index++;
+			}
 
 			++viter;
 		}
@@ -157,6 +153,9 @@ public:
 				}
 				showVertexes();
 				showEdges();
+				cout << "Inner structure: " << endl;
+				graph.printInnerStructure();
+				cout << endl;
 				break;
 			}
 
@@ -168,7 +167,7 @@ public:
 				cout << "Input vertex index: ";
 				int index;
 				cin >> index;
-				Vertex_t* vrt = getVertex(index);
+				Vertex_t* vrt = graph.getVertexByIndex(index);
 				if (vrt != NULL)
 				{
 					graph.deleteVertex(vrt);
@@ -184,8 +183,8 @@ public:
 				cout << "Input from and to vertexes indexes: ";
 				int index1,	index2;
 				cin >> index1 >> index2;
-				Vertex_t* fromvrt = getVertex(index1);
-				Vertex_t* tovrt = getVertex(index2);
+				Vertex_t* fromvrt = graph.getVertexByIndex(index1);
+				Vertex_t* tovrt = graph.getVertexByIndex(index2);
 				if ((fromvrt != NULL) && (tovrt != NULL))
 				{
 					Edge_t *edge = graph.insertEdge(fromvrt, tovrt);
@@ -211,8 +210,8 @@ public:
 				cout << "Insert from and to vertexes indexes: ";
 				int index1,	index2;
 				cin >> index1 >> index2;
-				Vertex_t* fromvrt = getVertex(index1);
-				Vertex_t* tovrt = getVertex(index2);
+				Vertex_t* fromvrt = graph.getVertexByIndex(index1);
+				Vertex_t* tovrt = graph.getVertexByIndex(index2);
 				if ((fromvrt != NULL) && (tovrt != NULL) && graph.deleteEdge(fromvrt, tovrt))
 				{
 
@@ -228,8 +227,8 @@ public:
 				cout << "Insert from and to vertexes indexes: ";
 				int index1,	index2;
 				cin >> index1 >> index2;
-				Vertex_t* fromvrt = getVertex(index1);
-				Vertex_t* tovrt = getVertex(index2);
+				Vertex_t* fromvrt = graph.getVertexByIndex(index1);
+				Vertex_t* tovrt = graph.getVertexByIndex(index2);
 				if ((fromvrt == NULL) || (tovrt == NULL))
 				{
 					cout << "Wrong index." << endl << endl;
@@ -335,7 +334,7 @@ public:
 							break;
 						}
 						cout << (*viter) << "   "
-							 << (*viter)->getIndex() << "   "
+							 << (*viter)->getUserIndex() << "   "
 							 << (*viter)->getName() << "   "
 							 << (*viter)->getData() << endl << endl;
 
@@ -429,12 +428,12 @@ public:
 						if (graph.isDirected() == true)
 							cout << (*eiter) << "   "
 								 << (*eiter)->getWeight() << "   "
-								 << (*eiter)->getBegin()->getIndex() << "--->" << (*eiter)->getEnd()->getIndex() << "   "
+								 << (*eiter)->getBegin()->getUserIndex() << "--->" << (*eiter)->getEnd()->getUserIndex() << "   "
 								 << (*eiter)->getData() << endl << endl;
 						else
 							cout << (*eiter) << "   "
 								 << (*eiter)->getWeight() << "   "
-								 << (*eiter)->getBegin()->getIndex() << "----" << (*eiter)->getEnd()->getIndex() << "   "
+								 << (*eiter)->getBegin()->getUserIndex() << "----" << (*eiter)->getEnd()->getUserIndex() << "   "
 								 << (*eiter)->getData() << endl << endl;
 						break;
 					}
@@ -498,7 +497,7 @@ public:
 					break;
 				}
 
-				typename Graph<Vertex_t,Edge_t>::OutgoingEdgeIterator oeiter = graph.outgoingEdgeBegin(getVertex(vindex));
+				typename Graph<Vertex_t,Edge_t>::OutgoingEdgeIterator oeiter = graph.outgoingEdgeBegin(graph.getVertexByIndex(vindex));
 				bool contoe = true;
 				while(contoe)
 				{
@@ -518,7 +517,7 @@ public:
 					{
 					case 0:
 					{
-						if (oeiter == graph.outgoingEdgeEnd(getVertex(vindex)))
+						if (oeiter == graph.outgoingEdgeEnd(graph.getVertexByIndex(vindex)))
 							break;
 
 						++oeiter;
@@ -527,7 +526,7 @@ public:
 
 					case 1:
 					{
-						if (oeiter == graph.outgoingEdgeEnd(getVertex(vindex)))
+						if (oeiter == graph.outgoingEdgeEnd(graph.getVertexByIndex(vindex)))
 						{
 							cout << "Couldn't get data." << endl << endl;
 							break;
@@ -536,19 +535,19 @@ public:
 						if (graph.isDirected() == true)
 							cout << (*oeiter) << "   "
 								 << (*oeiter)->getWeight() << "   "
-								 << (*oeiter)->getBegin()->getIndex() << "--->" << (*oeiter)->getEnd()->getIndex() << "   "
+								 << (*oeiter)->getBegin()->getUserIndex() << "--->" << (*oeiter)->getEnd()->getUserIndex() << "   "
 								 << (*oeiter)->getData() << endl << endl;
 						else
 							cout << (*oeiter) << "   "
 								 << (*oeiter)->getWeight() << "   "
-								 << (*oeiter)->getBegin()->getIndex() << "----" << (*oeiter)->getEnd()->getIndex() << "   "
+								 << (*oeiter)->getBegin()->getUserIndex() << "----" << (*oeiter)->getEnd()->getUserIndex() << "   "
 								 << (*oeiter)->getData() << endl << endl;
 						break;
 					}
 
 					case 2:
 					{
-						if (oeiter == graph.outgoingEdgeEnd(getVertex(vindex)))
+						if (oeiter == graph.outgoingEdgeEnd(graph.getVertexByIndex(vindex)))
 						{
 							cout << "Couldn't set edge weight." << endl << endl;
 							break;
@@ -561,7 +560,7 @@ public:
 
 					case 3:
 					{
-						if (oeiter == graph.outgoingEdgeEnd(getVertex(vindex)))
+						if (oeiter == graph.outgoingEdgeEnd(graph.getVertexByIndex(vindex)))
 						{
 							cout << "Couldn't set edge data." << endl << endl;
 						}
@@ -604,7 +603,7 @@ public:
 					break;
 				}
 
-				typename Graph<Vertex_t,Edge_t>::IncomingEdgeIterator ieiter = graph.incomingEdgeBegin(getVertex(vindex));
+				typename Graph<Vertex_t,Edge_t>::IncomingEdgeIterator ieiter = graph.incomingEdgeBegin(graph.getVertexByIndex(vindex));
 				bool contie = true;
 				while(contie)
 				{
@@ -624,7 +623,7 @@ public:
 					{
 					case 0:
 					{
-						if (ieiter == graph.incomingEdgeEnd(getVertex(vindex)))
+						if (ieiter == graph.incomingEdgeEnd(graph.getVertexByIndex(vindex)))
 							break;
 
 						++ieiter;
@@ -633,7 +632,7 @@ public:
 
 					case 1:
 					{
-						if (ieiter == graph.incomingEdgeEnd(getVertex(vindex)))
+						if (ieiter == graph.incomingEdgeEnd(graph.getVertexByIndex(vindex)))
 						{
 							cout << "Couldn't get data." << endl;
 							break;
@@ -642,19 +641,19 @@ public:
 						if (graph.isDirected() == true)
 							cout << (*ieiter) << "   "
 								 << (*ieiter)->getWeight() << "   "
-								 << (*ieiter)->getBegin()->getIndex() << "--->" << (*ieiter)->getEnd()->getIndex() << "   "
+								 << (*ieiter)->getBegin()->getUserIndex() << "--->" << (*ieiter)->getEnd()->getUserIndex() << "   "
 								 << (*ieiter)->getData() << endl;
 						else
 							cout << (*ieiter) << "   "
 								 << (*ieiter)->getWeight() << "   "
-								 << (*ieiter)->getBegin()->getIndex() << "----" << (*ieiter)->getEnd()->getIndex() << "   "
+								 << (*ieiter)->getBegin()->getUserIndex() << "----" << (*ieiter)->getEnd()->getUserIndex() << "   "
 								 << (*ieiter)->getData() << endl;
 						break;
 					}
 
 					case 2:
 					{
-						if (ieiter == graph.incomingEdgeEnd(getVertex(vindex)))
+						if (ieiter == graph.incomingEdgeEnd(graph.getVertexByIndex(vindex)))
 						{
 							cout << "Couldn't set edge weight." << endl;
 							break;
@@ -666,7 +665,7 @@ public:
 
 					case 3:
 					{
-						if (ieiter == graph.incomingEdgeEnd(getVertex(vindex)))
+						if (ieiter == graph.incomingEdgeEnd(graph.getVertexByIndex(vindex)))
 						{
 							cout << "Couldn't set edge data." << endl;
 							break;

@@ -8,18 +8,20 @@ private:
 	Name_t name;
 	Data_t data;
 	int index;
+	int user_index;
 
 public:
-	VertexDescriptor () : index(-1){}
+	VertexDescriptor () : index(-1), user_index(-1){}
 
-	VertexDescriptor (Name_t _name, Data_t _data, int _index) :
-		name(_name), data(_data), index(_index){}
+	VertexDescriptor (Name_t _name, Data_t _data, int _index, int uidx) :
+		name(_name), data(_data), index(_index), user_index(uidx){}
 
 	VertexDescriptor (VertexDescriptor& one)
 	{
 		name = one.getName();
 		data = one.getData();
 		index = one.getIndex();
+		user_index = one.getUserIndex();
 	}
 
 	~VertexDescriptor (){}
@@ -33,13 +35,16 @@ public:
 	Data_t& getSData () {return data;}
 
 	int getIndex (){return index;}
+	int getUserIndex() {return user_index;}
 	void setIndex (int _index){index = _index;}
+	void setUserIndex(int uidx) { user_index = uidx; }
 
 	VertexDescriptor& operator= (VertexDescriptor& other)
 	{
 		name = other.getName();
 		data = other.getData();
 		index = other.getIndex();
+		user_index = other.getUserIndex();
 		return *this;
 	}
 };
