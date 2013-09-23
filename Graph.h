@@ -477,7 +477,7 @@ public:
 			{
 				std::cout << std::setw(2) << std::right << (*vi)->getUserIndex() << ": ";
 				for(int j = 0; j < mgraph->matrix[i].count(); ++j)
-					std::cout << std::setw(2) << std::right << ((mgraph->matrix[i][j]) ? 'x' : 'o') << " ";
+					std::cout << std::setw(2) << std::right << ((mgraph->matrix[i][j]) ? 'x' : '-') << " ";
 				std::cout << std::endl;
 			}
 		}
